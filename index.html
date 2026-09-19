@@ -196,53 +196,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 
             <div class="sidebar-top">
 
-                <div class="tabs">
-
-                    <button
-                        class="tab active"
-                        id="friendsTab"
-                        onclick="showTab('friends')"
-                    >
-                        👥 Friends
-                    </button>
-
-                    <button
-                        class="tab"
-                        id="requestsTab"
-                        onclick="showTab('requests')"
-                    >
-                        📨 Requests
-
-                        <span
-                            id="requestBadge"
-                            class="badge"
-                            style="display:none"
-                        >
-                            0
-                        </span>
-
-                    </button>
-
-                </div>
-
                 <div id="friendsControls">
-
-                    <div class="section-title">
-                        ➕ Add Friend by MyChatBox ID
-                    </div>
-
-                    <div class="friend-add-row">
-
-                        <input
-                            id="friendIdInput"
-                            placeholder="Example: MCB123456"
-                        >
-
-                        <button onclick="sendFriendRequest()">
-                            Add
-                        </button>
-
-                    </div>
 
                     <input
                         class="search"
@@ -869,32 +823,14 @@ async function areFriends(uid1,uid2){
 
 /* SEND FRIEND REQUEST */
 
-window.sendFriendRequest = async function(){
-
-    const input =
-        document.getElementById(
-            "friendIdInput"
-        );
-
-    const publicId =
-        input.value
-            .trim()
-            .toUpperCase();
+window.sendFriendRequestById = async function(publicId){
 
     if(!publicId){
-        alert("Enter a MyChatBox ID.");
         return;
     }
 
     if(!currentProfile){
         return;
-    }
-
-    if(publicId === currentProfile.publicId){
-
-        alert("You cannot add yourself.");
-        return;
-
     }
 
     try{
@@ -986,8 +922,6 @@ window.sendFriendRequest = async function(){
             }
         );
 
-        input.value = "";
-
         alert(
             "Friend request sent ✅"
         );
@@ -1032,13 +966,15 @@ function loadRequests(){
                         "requestBadge"
                     );
 
-                badge.innerText =
-                    snapshot.size;
+                if(badge){
+                    badge.innerText =
+                        snapshot.size;
 
-                badge.style.display =
-                    snapshot.size
-                    ? "inline-block"
-                    : "none";
+                    badge.style.display =
+                        snapshot.size
+                        ? "inline-block"
+                        : "none";
+                }
 
                 const homeBadge = document.getElementById("homeRequestBadge");
                 if(homeBadge){
@@ -1490,15 +1426,25 @@ window.showMainPage = function(page){
 };
 
 window.openAddFriendFromHome = function(){
-    showMainPage("messages");
-    setTimeout(function(){
-        showTab("friends");
-        const input = document.getElementById("friendIdInput");
-        if(input){
-            input.focus();
-            input.scrollIntoView({behavior:"smooth", block:"center"});
-        }
-    }, 80);
+    if(!currentProfile) return;
+
+    const publicId = prompt("Enter the MyChatBox ID of the person you want to add:");
+
+    if(publicId === null) return;
+
+    const cleanId = publicId.trim().toUpperCase();
+
+    if(!cleanId){
+        alert("Please enter a MyChatBox ID.");
+        return;
+    }
+
+    if(cleanId === currentProfile.publicId){
+        alert("You cannot add yourself.");
+        return;
+    }
+
+    sendFriendRequestById(cleanId);
 };
 
 window.openRequestsFromHome = function(){
@@ -1533,39 +1479,21 @@ function updateHomeProfile(){
 
 window.showTab = function(tab){
 
-    const friendsTab =
-        document.getElementById(
-            "friendsTab"
-        );
-
-    const requestsTab =
-        document.getElementById(
-            "requestsTab"
-        );
+    const friendsControls = document.getElementById("friendsControls");
 
     if(tab === "friends"){
 
-        friendsTab.classList.add("active");
-
-        requestsTab.classList.remove("active");
-
-        document.getElementById(
-            "friendsControls"
-        ).style.display = "block";
+        if(friendsControls){
+            friendsControls.style.display = "block";
+        }
 
         renderFriends(allFriends);
 
-    }
+    } else {
 
-    else{
-
-        friendsTab.classList.remove("active");
-
-        requestsTab.classList.add("active");
-
-        document.getElementById(
-            "friendsControls"
-        ).style.display = "none";
+        if(friendsControls){
+            friendsControls.style.display = "none";
+        }
 
         const q =
             query(
