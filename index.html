@@ -438,8 +438,6 @@ input:focus,textarea:focus{
 
 <body>
 
-<!-- LOGIN PAGE -->
-
 <div class="login" id="loginPage">
 
     <h1>💬 MyChatBox</h1>
@@ -477,9 +475,6 @@ input:focus,textarea:focus{
 
 </div>
 
-
-<!-- CHAT PAGE -->
-
 <div id="chatPage">
 
     <div class="header">
@@ -513,10 +508,7 @@ input:focus,textarea:focus{
 
     </div>
 
-
     <div class="chat-container">
-
-        <!-- SIDEBAR -->
 
         <div class="sidebar">
 
@@ -551,7 +543,6 @@ input:focus,textarea:focus{
 
                 </div>
 
-
                 <div id="friendsControls">
 
                     <div class="section-title">
@@ -571,7 +562,6 @@ input:focus,textarea:focus{
 
                     </div>
 
-
                     <input
                         class="search"
                         id="searchUsers"
@@ -582,7 +572,6 @@ input:focus,textarea:focus{
                 </div>
 
             </div>
-
 
             <div
                 class="list"
@@ -595,9 +584,6 @@ input:focus,textarea:focus{
 
         </div>
 
-
-        <!-- CHAT -->
-
         <div class="chat">
 
             <div
@@ -606,7 +592,6 @@ input:focus,textarea:focus{
             >
                 Select a friend to chat
             </div>
-
 
             <div
                 class="messages"
@@ -618,7 +603,6 @@ input:focus,textarea:focus{
                 </div>
 
             </div>
-
 
             <div class="send-area">
 
@@ -639,9 +623,6 @@ input:focus,textarea:focus{
     </div>
 
 </div>
-
-
-<!-- PROFILE MODAL -->
 
 <div
     class="modal"
@@ -701,9 +682,6 @@ input:focus,textarea:focus{
 
 </div>
 
-
-<!-- FIREBASE -->
-
 <script type="module">
 
 import {
@@ -711,17 +689,17 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
-
 import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    setPersistence,
+    browserLocalPersistence
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-
 
 import {
     getFirestore,
@@ -739,82 +717,48 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-
-/* FIREBASE CONFIG */
-
 const firebaseConfig = {
-
-    apiKey:
-        "AIzaSyB-6OqLo9Hk_KydMV30uzthd7X1x5PBlcs",
-
-    authDomain:
-        "mychatbox-b3c99.firebaseapp.com",
-
-    projectId:
-        "mychatbox-b3c99",
-
-    storageBucket:
-        "mychatbox-b3c99.firebasestorage.app",
-
-    messagingSenderId:
-        "152288209919",
-
-    appId:
-        "1:152288209919:web:763bef9165a07e47c3d5ca",
-
-    measurementId:
-        "G-WNW33F1NXP"
+    apiKey: "AIzaSyB-6OqLo9Hk_KydMV30uzthd7X1x5PBlcs",
+    authDomain: "mychatbox-b3c99.firebaseapp.com",
+    projectId: "mychatbox-b3c99",
+    storageBucket: "mychatbox-b3c99.firebasestorage.app",
+    messagingSenderId: "152288209919",
+    appId: "1:152288209919:web:763bef9165a07e47c3d5ca",
+    measurementId: "G-WNW33F1NXP"
 };
 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-/* START FIREBASE */
+/* KEEP USER LOGGED IN */
 
-const app =
-    initializeApp(firebaseConfig);
-
-const auth =
-    getAuth(app);
-
-const db =
-    getFirestore(app);
-
-
-/* VARIABLES */
+setPersistence(
+    auth,
+    browserLocalPersistence
+).catch(function(error){
+    console.error(
+        "Auth persistence error:",
+        error
+    );
+});
 
 let currentProfile = null;
-
 let selectedUser = null;
-
 let unsubscribeFriends = null;
-
 let unsubscribeRequests = null;
-
 let unsubscribeMessages = null;
-
 let allFriends = [];
 
-
-/* FORGOT PASSWORD */
-
-window.forgotPassword =
-async function(){
+window.forgotPassword = async function(){
 
     const email =
-        document.getElementById(
-            "email"
-        ).value.trim();
-
+        document.getElementById("email").value.trim();
 
     if(!email){
-
-        alert(
-            "Pehle apna email enter karo."
-        );
-
+        alert("Pehle apna email enter karo.");
         return;
-
     }
-
 
     try{
 
@@ -823,25 +767,16 @@ async function(){
             email
         );
 
-
         alert(
             "Password reset link tumhare email par bhej diya gaya hai. 📧\n\nInbox ke saath Spam/Junk folder bhi check kar lena."
         );
 
     }
-
     catch(error){
-
-        alert(
-            error.message
-        );
-
+        alert(error.message);
     }
 
 };
-
-
-/* CREATE RANDOM ID */
 
 function makePublicId(){
 
@@ -853,40 +788,25 @@ function makePublicId(){
 
 }
 
-
-/* CHECK UNIQUE ID */
-
 async function createUniquePublicId(){
 
     for(let i = 0; i < 10; i++){
 
-        const id =
-            makePublicId();
-
+        const id = makePublicId();
 
         const q =
             query(
                 collection(db,"users"),
-                where(
-                    "publicId",
-                    "==",
-                    id
-                )
+                where("publicId","==",id)
             );
 
-
-        const snap =
-            await getDocs(q);
-
+        const snap = await getDocs(q);
 
         if(snap.empty){
-
             return id;
-
         }
 
     }
-
 
     throw new Error(
         "Could not create unique ID. Try again."
@@ -894,126 +814,106 @@ async function createUniquePublicId(){
 
 }
 
-
 /* GET CURRENT USER PROFILE */
 
 async function getMyUserDoc(){
 
-    const user =
-        auth.currentUser;
-
+    const user = auth.currentUser;
 
     if(!user){
-
         return null;
-
     }
-
 
     const q =
         query(
             collection(db,"users"),
-            where(
-                "uid",
-                "==",
-                user.uid
-            )
+            where("uid","==",user.uid)
         );
 
-
-    const snap =
-        await getDocs(q);
-
+    const snap = await getDocs(q);
 
     if(snap.empty){
-
         return null;
+    }
+
+    /*
+       If old duplicate user documents exist,
+       keep the first one and remove the extras.
+    */
+
+    const docs = snap.docs;
+    const keep = docs[0];
+
+    for(let i = 1; i < docs.length; i++){
+
+        try{
+
+            await deleteDoc(
+                doc(
+                    db,
+                    "users",
+                    docs[i].id
+                )
+            );
+
+        }
+        catch(error){
+
+            console.error(
+                "Could not remove duplicate profile:",
+                error
+            );
+
+        }
 
     }
 
-
-    const d =
-        snap.docs[0];
-
-
     return {
-
-        id:d.id,
-
-        ...d.data()
-
+        id:keep.id,
+        ...keep.data()
     };
 
 }
-
 
 /* CREATE / UPDATE PROFILE */
 
 async function ensureMyProfile(){
 
-    const user =
-        auth.currentUser;
-
+    const user = auth.currentUser;
 
     if(!user){
-
         return;
-
     }
 
-
-    let profile =
-        await getMyUserDoc();
-
+    let profile = await getMyUserDoc();
 
     if(!profile){
 
         const publicId =
             await createUniquePublicId();
 
-
         const ref =
             await addDoc(
                 collection(db,"users"),
                 {
-
                     uid:user.uid,
-
                     email:user.email,
-
-                    name:
-                        user.email.split("@")[0],
-
+                    name:user.email.split("@")[0],
                     bio:"",
-
                     publicId:publicId,
-
                     online:true,
-
-                    createdAt:
-                        serverTimestamp()
-
+                    createdAt:serverTimestamp()
                 }
             );
 
-
         profile = {
-
             id:ref.id,
-
             uid:user.uid,
-
             email:user.email,
-
-            name:
-                user.email.split("@")[0],
-
+            name:user.email.split("@")[0],
             bio:"",
-
             publicId:publicId,
-
             online:true
-
         };
 
     }
@@ -1022,29 +922,19 @@ async function ensureMyProfile(){
 
         const updates = {};
 
-
         if(!profile.publicId){
-
             updates.publicId =
                 await createUniquePublicId();
-
         }
-
 
         if(!profile.name){
-
             updates.name =
                 user.email.split("@")[0];
-
         }
-
 
         updates.online = true;
 
-
-        if(
-            Object.keys(updates).length
-        ){
+        if(Object.keys(updates).length){
 
             await updateDoc(
                 doc(
@@ -1055,23 +945,16 @@ async function ensureMyProfile(){
                 updates
             );
 
-
             profile = {
-
                 ...profile,
-
                 ...updates
-
             };
 
         }
 
     }
 
-
-    currentProfile =
-        profile;
-
+    currentProfile = profile;
 
     document.getElementById(
         "myIdText"
@@ -1081,45 +964,27 @@ async function ensureMyProfile(){
 
 }
 
-
 /* SIGNUP */
 
-window.signup =
-async function(){
+window.signup = async function(){
 
     const email =
-        document.getElementById(
-            "email"
-        ).value.trim();
-
+        document.getElementById("email").value.trim();
 
     const password =
-        document.getElementById(
-            "password"
-        ).value;
-
+        document.getElementById("password").value;
 
     if(!email || !password){
-
-        alert(
-            "Enter email and password."
-        );
-
+        alert("Enter email and password.");
         return;
-
     }
 
-
     if(password.length < 6){
-
         alert(
             "Password must be at least 6 characters."
         );
-
         return;
-
     }
-
 
     try{
 
@@ -1130,34 +995,21 @@ async function(){
                 password
             );
 
-
         const publicId =
             await createUniquePublicId();
-
 
         await addDoc(
             collection(db,"users"),
             {
-
                 uid:result.user.uid,
-
                 email:email,
-
-                name:
-                    email.split("@")[0],
-
+                name:email.split("@")[0],
                 bio:"",
-
                 publicId:publicId,
-
                 online:true,
-
-                createdAt:
-                    serverTimestamp()
-
+                createdAt:serverTimestamp()
             }
         );
-
 
         alert(
             "Account created 🎉\n\nYour MyChatBox ID is:\n" +
@@ -1165,45 +1017,26 @@ async function(){
         );
 
     }
-
     catch(error){
-
-        alert(
-            error.message
-        );
-
+        alert(error.message);
     }
 
 };
 
-
 /* LOGIN */
 
-window.login =
-async function(){
+window.login = async function(){
 
     const email =
-        document.getElementById(
-            "email"
-        ).value.trim();
-
+        document.getElementById("email").value.trim();
 
     const password =
-        document.getElementById(
-            "password"
-        ).value;
-
+        document.getElementById("password").value;
 
     if(!email || !password){
-
-        alert(
-            "Enter email and password."
-        );
-
+        alert("Enter email and password.");
         return;
-
     }
-
 
     try{
 
@@ -1214,22 +1047,15 @@ async function(){
         );
 
     }
-
     catch(error){
-
-        alert(
-            error.message
-        );
-
+        alert(error.message);
     }
 
 };
 
-
 /* LOGOUT */
 
-window.logout =
-async function(){
+window.logout = async function(){
 
     try{
 
@@ -1249,14 +1075,11 @@ async function(){
         }
 
     }
-
     catch(error){}
-
 
     await signOut(auth);
 
 };
-
 
 /* AUTH STATE */
 
@@ -1268,15 +1091,11 @@ onAuthStateChanged(
 
             document.getElementById(
                 "loginPage"
-            ).style.display =
-                "none";
-
+            ).style.display = "none";
 
             document.getElementById(
                 "chatPage"
-            ).style.display =
-                "block";
-
+            ).style.display = "block";
 
             try{
 
@@ -1287,12 +1106,9 @@ onAuthStateChanged(
                 loadRequests();
 
             }
-
             catch(error){
 
-                alert(
-                    error.message
-                );
+                alert(error.message);
 
             }
 
@@ -1302,18 +1118,13 @@ onAuthStateChanged(
 
             document.getElementById(
                 "loginPage"
-            ).style.display =
-                "block";
-
+            ).style.display = "block";
 
             document.getElementById(
                 "chatPage"
-            ).style.display =
-                "none";
-
+            ).style.display = "none";
 
             selectedUser = null;
-
             currentProfile = null;
 
         }
@@ -1321,71 +1132,42 @@ onAuthStateChanged(
     }
 );
 
-
 /* FIND USER BY ID */
 
-async function findUserByPublicId(
-    publicId
-){
+async function findUserByPublicId(publicId){
 
     const q =
         query(
             collection(db,"users"),
-            where(
-                "publicId",
-                "==",
-                publicId
-            )
+            where("publicId","==",publicId)
         );
 
-
-    const snap =
-        await getDocs(q);
-
+    const snap = await getDocs(q);
 
     if(snap.empty){
-
         return null;
-
     }
 
-
-    const d =
-        snap.docs[0];
-
+    const d = snap.docs[0];
 
     return {
-
         id:d.id,
-
         ...d.data()
-
     };
 
 }
 
-
 /* CHECK FRIENDSHIP */
 
-async function areFriends(
-    uid1,
-    uid2
-){
+async function areFriends(uid1,uid2){
 
     const q =
         query(
             collection(db,"friendships"),
-            where(
-                "members",
-                "array-contains",
-                uid1
-            )
+            where("members","array-contains",uid1)
         );
 
-
-    const snap =
-        await getDocs(q);
-
+    const snap = await getDocs(q);
 
     return snap.docs.some(
         function(d){
@@ -1393,73 +1175,47 @@ async function areFriends(
             const members =
                 d.data().members || [];
 
-
-            return members.includes(
-                uid2
-            );
+            return members.includes(uid2);
 
         }
     );
 
 }
 
-
 /* SEND FRIEND REQUEST */
 
-window.sendFriendRequest =
-async function(){
+window.sendFriendRequest = async function(){
 
     const input =
         document.getElementById(
             "friendIdInput"
         );
 
-
     const publicId =
         input.value
             .trim()
             .toUpperCase();
 
-
     if(!publicId){
-
-        alert(
-            "Enter a MyChatBox ID."
-        );
-
+        alert("Enter a MyChatBox ID.");
         return;
-
     }
-
 
     if(!currentProfile){
+        return;
+    }
 
+    if(publicId === currentProfile.publicId){
+
+        alert("You cannot add yourself.");
         return;
 
     }
-
-
-    if(
-        publicId ===
-        currentProfile.publicId
-    ){
-
-        alert(
-            "You cannot add yourself."
-        );
-
-        return;
-
-    }
-
 
     try{
 
         const target =
-            await findUserByPublicId(
-                publicId
-            );
-
+            await findUserByPublicId(publicId);
 
         if(!target){
 
@@ -1470,7 +1226,6 @@ async function(){
             return;
 
         }
-
 
         if(
             await areFriends(
@@ -1487,67 +1242,27 @@ async function(){
 
         }
 
-
         const existing1 =
             query(
-                collection(
-                    db,
-                    "friendRequests"
-                ),
-
-                where(
-                    "fromUid",
-                    "==",
-                    currentProfile.uid
-                ),
-
-                where(
-                    "toUid",
-                    "==",
-                    target.uid
-                ),
-
-                where(
-                    "status",
-                    "==",
-                    "pending"
-                )
+                collection(db,"friendRequests"),
+                where("fromUid","==",currentProfile.uid),
+                where("toUid","==",target.uid),
+                where("status","==","pending")
             );
-
 
         const existing2 =
             query(
-                collection(
-                    db,
-                    "friendRequests"
-                ),
-
-                where(
-                    "fromUid",
-                    "==",
-                    target.uid
-                ),
-
-                where(
-                    "toUid",
-                    "==",
-                    currentProfile.uid
-                ),
-
-                where(
-                    "status",
-                    "==",
-                    "pending"
-                )
+                collection(db,"friendRequests"),
+                where("fromUid","==",target.uid),
+                where("toUid","==",currentProfile.uid),
+                where("status","==","pending")
             );
-
 
         const results =
             await Promise.all([
                 getDocs(existing1),
                 getDocs(existing2)
             ]);
-
 
         if(!results[0].empty){
 
@@ -1559,7 +1274,6 @@ async function(){
 
         }
 
-
         if(!results[1].empty){
 
             alert(
@@ -1570,97 +1284,58 @@ async function(){
 
         }
 
-
         await addDoc(
-            collection(
-                db,
-                "friendRequests"
-            ),
+            collection(db,"friendRequests"),
             {
-
-                fromUid:
-                    currentProfile.uid,
-
-                fromName:
-                    currentProfile.name,
-
-                fromEmail:
-                    currentProfile.email,
-
-                fromPublicId:
-                    currentProfile.publicId,
-
-                toUid:
-                    target.uid,
-
+                fromUid:currentProfile.uid,
+                fromName:currentProfile.name,
+                fromEmail:currentProfile.email,
+                fromPublicId:currentProfile.publicId,
+                toUid:target.uid,
                 toName:
                     target.name ||
                     target.email.split("@")[0],
-
-                toEmail:
-                    target.email,
-
-                status:
-                    "pending",
-
-                createdAt:
-                    serverTimestamp()
-
+                toEmail:target.email,
+                status:"pending",
+                createdAt:serverTimestamp()
             }
         );
 
-
         input.value = "";
-
 
         alert(
             "Friend request sent ✅"
         );
 
     }
-
     catch(error){
-
-        alert(
-            error.message
-        );
-
+        alert(error.message);
     }
 
 };
-
 
 /* LOAD REQUESTS */
 
 function loadRequests(){
 
     if(unsubscribeRequests){
-
         unsubscribeRequests();
-
     }
-
 
     const q =
         query(
-            collection(
-                db,
-                "friendRequests"
-            ),
-
+            collection(db,"friendRequests"),
             where(
                 "toUid",
                 "==",
                 currentProfile.uid
             ),
-
             where(
                 "status",
                 "==",
                 "pending"
             )
         );
-
 
     unsubscribeRequests =
         onSnapshot(
@@ -1672,29 +1347,22 @@ function loadRequests(){
                         "requestBadge"
                     );
 
-
                 badge.innerText =
                     snapshot.size;
-
 
                 badge.style.display =
                     snapshot.size
                     ? "inline-block"
                     : "none";
 
-
                 if(
                     document
-                    .getElementById(
-                        "requestsTab"
-                    )
+                    .getElementById("requestsTab")
                     .classList
                     .contains("active")
                 ){
 
-                    renderRequests(
-                        snapshot
-                    );
+                    renderRequests(snapshot);
 
                 }
 
@@ -1703,21 +1371,16 @@ function loadRequests(){
 
 }
 
-
 /* RENDER REQUESTS */
 
-function renderRequests(
-    snapshot
-){
+function renderRequests(snapshot){
 
     const list =
         document.getElementById(
             "usersList"
         );
 
-
     list.innerHTML = "";
-
 
     if(snapshot.empty){
 
@@ -1728,23 +1391,15 @@ function renderRequests(
 
     }
 
-
     snapshot.forEach(
         function(d){
 
-            const r =
-                d.data();
-
+            const r = d.data();
 
             const div =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
-
-            div.className =
-                "user";
-
+            div.className = "user";
 
             div.innerHTML = `
 
@@ -1790,21 +1445,16 @@ function renderRequests(
 
             `;
 
-
-            list.appendChild(
-                div
-            );
+            list.appendChild(div);
 
         }
     );
 
 }
 
-
 /* ACCEPT REQUEST */
 
-window.acceptRequest =
-async function(requestId){
+window.acceptRequest = async function(requestId){
 
     try{
 
@@ -1815,62 +1465,54 @@ async function(requestId){
                 requestId
             );
 
-
-        const requestQuery =
-            query(
-                collection(
-                    db,
-                    "friendRequests"
-                ),
-
-                where(
-                    "__name__",
-                    "==",
-                    requestId
+        const requestSnap =
+            await getDocs(
+                query(
+                    collection(
+                        db,
+                        "friendRequests"
+                    ),
+                    where(
+                        "__name__",
+                        "==",
+                        requestId
+                    )
                 )
             );
 
-
-        const requestSnap =
-            await getDocs(
-                requestQuery
-            );
-
-
         if(requestSnap.empty){
-
             return;
-
         }
 
-
         const request =
-            requestSnap
-            .docs[0]
-            .data();
+            requestSnap.docs[0].data();
 
+        /*
+          IMPORTANT:
+          Don't create duplicate friendship.
+        */
 
-        await addDoc(
-            collection(
-                db,
-                "friendships"
-            ),
-            {
+        const alreadyFriends =
+            await areFriends(
+                currentProfile.uid,
+                request.fromUid
+            );
 
-                members:[
+        if(!alreadyFriends){
 
-                    currentProfile.uid,
+            await addDoc(
+                collection(db,"friendships"),
+                {
+                    members:[
+                        currentProfile.uid,
+                        request.fromUid
+                    ],
+                    createdAt:
+                        serverTimestamp()
+                }
+            );
 
-                    request.fromUid
-
-                ],
-
-                createdAt:
-                    serverTimestamp()
-
-            }
-        );
-
+        }
 
         await updateDoc(
             requestRef,
@@ -1879,31 +1521,22 @@ async function(requestId){
             }
         );
 
-
-        alert(
-            "Friend added ✅"
-        );
-
+        alert("Friend added ✅");
 
         showTab("friends");
 
     }
-
     catch(error){
 
-        alert(
-            error.message
-        );
+        alert(error.message);
 
     }
 
 };
 
-
 /* REJECT REQUEST */
 
-window.rejectRequest =
-async function(requestId){
+window.rejectRequest = async function(requestId){
 
     try{
 
@@ -1913,50 +1546,37 @@ async function(requestId){
                 "friendRequests",
                 requestId
             ),
-
             {
                 status:"rejected"
             }
         );
 
     }
-
     catch(error){
 
-        alert(
-            error.message
-        );
+        alert(error.message);
 
     }
 
 };
-
 
 /* LOAD FRIENDS */
 
 function loadFriends(){
 
     if(unsubscribeFriends){
-
         unsubscribeFriends();
-
     }
-
 
     const q =
         query(
-            collection(
-                db,
-                "friendships"
-            ),
-
+            collection(db,"friendships"),
             where(
                 "members",
                 "array-contains",
                 currentProfile.uid
             )
         );
-
 
     unsubscribeFriends =
         onSnapshot(
@@ -1965,6 +1585,15 @@ function loadFriends(){
 
                 const users = [];
 
+                /*
+                  IMPORTANT:
+                  Prevent old duplicate friendship
+                  documents from showing the same
+                  friend multiple times.
+                */
+
+                const seenUids =
+                    new Set();
 
                 for(
                     const d of snapshot.docs
@@ -1973,32 +1602,27 @@ function loadFriends(){
                     const members =
                         d.data().members || [];
 
-
                     const otherUid =
                         members.find(
                             function(x){
-
                                 return x !==
                                     currentProfile.uid;
-
                             }
                         );
 
-
                     if(!otherUid){
-
                         continue;
-
                     }
 
+                    if(seenUids.has(otherUid)){
+                        continue;
+                    }
+
+                    seenUids.add(otherUid);
 
                     const uq =
                         query(
-                            collection(
-                                db,
-                                "users"
-                            ),
-
+                            collection(db,"users"),
                             where(
                                 "uid",
                                 "==",
@@ -2006,61 +1630,43 @@ function loadFriends(){
                             )
                         );
 
-
                     const us =
                         await getDocs(uq);
-
 
                     if(!us.empty){
 
                         const ud =
                             us.docs[0];
 
-
                         users.push({
-
                             id:ud.id,
-
                             ...ud.data(),
-
-                            friendshipId:
-                                d.id
-
+                            friendshipId:d.id
                         });
 
                     }
 
                 }
 
+                allFriends = users;
 
-                allFriends =
-                    users;
-
-
-                renderFriends(
-                    users
-                );
+                renderFriends(users);
 
             }
         );
 
 }
 
-
 /* RENDER FRIENDS */
 
-function renderFriends(
-    users
-){
+function renderFriends(users){
 
     const list =
         document.getElementById(
             "usersList"
         );
 
-
     list.innerHTML = "";
-
 
     if(!users.length){
 
@@ -2071,7 +1677,6 @@ function renderFriends(
 
     }
 
-
     users.forEach(
         function(user){
 
@@ -2080,10 +1685,7 @@ function renderFriends(
                     "div"
                 );
 
-
-            div.className =
-                "user";
-
+            div.className = "user";
 
             div.dataset.search =
                 (
@@ -2093,7 +1695,6 @@ function renderFriends(
                     " " +
                     (user.publicId || "")
                 ).toLowerCase();
-
 
             div.innerHTML = `
 
@@ -2132,7 +1733,6 @@ function renderFriends(
 
             `;
 
-
             div.onclick =
                 function(){
 
@@ -2143,27 +1743,21 @@ function renderFriends(
 
                 };
 
-
-            list.appendChild(
-                div
-            );
+            list.appendChild(div);
 
         }
     );
 
 }
 
-
 /* SEARCH FRIENDS */
 
-window.filterFriends =
-function(){
+window.filterFriends = function(){
 
     const term =
         document.getElementById(
             "searchUsers"
         ).value.toLowerCase();
-
 
     document
         .querySelectorAll(
@@ -2174,9 +1768,7 @@ function(){
 
                 el.style.display =
                     el.dataset.search &&
-                    el.dataset.search.includes(
-                        term
-                    )
+                    el.dataset.search.includes(term)
                     ? "flex"
                     : "none";
 
@@ -2185,77 +1777,52 @@ function(){
 
 };
 
-
 /* TABS */
 
-window.showTab =
-function(tab){
+window.showTab = function(tab){
 
     const friendsTab =
         document.getElementById(
             "friendsTab"
         );
 
-
     const requestsTab =
         document.getElementById(
             "requestsTab"
         );
 
-
     if(tab === "friends"){
 
-        friendsTab.classList.add(
-            "active"
-        );
+        friendsTab.classList.add("active");
 
-        requestsTab.classList.remove(
-            "active"
-        );
-
+        requestsTab.classList.remove("active");
 
         document.getElementById(
             "friendsControls"
-        ).style.display =
-            "block";
+        ).style.display = "block";
 
-
-        renderFriends(
-            allFriends
-        );
+        renderFriends(allFriends);
 
     }
 
     else{
 
-        friendsTab.classList.remove(
-            "active"
-        );
+        friendsTab.classList.remove("active");
 
-        requestsTab.classList.add(
-            "active"
-        );
-
+        requestsTab.classList.add("active");
 
         document.getElementById(
             "friendsControls"
-        ).style.display =
-            "none";
-
+        ).style.display = "none";
 
         const q =
             query(
-                collection(
-                    db,
-                    "friendRequests"
-                ),
-
+                collection(db,"friendRequests"),
                 where(
                     "toUid",
                     "==",
                     currentProfile.uid
                 ),
-
                 where(
                     "status",
                     "==",
@@ -2263,32 +1830,21 @@ function(tab){
                 )
             );
 
-
         getDocs(q)
-            .then(
-                renderRequests
-            );
+            .then(renderRequests);
 
     }
 
 };
 
-
 /* SELECT FRIEND */
 
-function selectUser(
-    user,
-    element
-){
+function selectUser(user,element){
 
-    selectedUser =
-        user;
-
+    selectedUser = user;
 
     document
-        .querySelectorAll(
-            ".user"
-        )
+        .querySelectorAll(".user")
         .forEach(
             function(item){
 
@@ -2299,18 +1855,13 @@ function selectUser(
             }
         );
 
-
-    element.classList.add(
-        "selected"
-    );
-
+    element.classList.add("selected");
 
     document.getElementById(
         "chatHeader"
     ).innerHTML =
 
         "💬 " +
-
         escapeHtml(
             user.name ||
             user.email
@@ -2332,11 +1883,9 @@ function selectUser(
 
         "</small>";
 
-
     loadMessages();
 
 }
-
 
 /* LOAD MESSAGES */
 
@@ -2346,49 +1895,33 @@ function loadMessages(){
         !selectedUser ||
         !currentProfile
     ){
-
         return;
-
     }
-
 
     if(unsubscribeMessages){
-
         unsubscribeMessages();
-
     }
-
 
     const box =
         document.getElementById(
             "messages"
         );
 
-
     box.innerHTML = "";
-
 
     const q =
         query(
-
-            collection(
-                db,
-                "messages"
-            ),
-
+            collection(db,"messages"),
             where(
                 "participants",
                 "array-contains",
                 currentProfile.uid
             ),
-
             orderBy(
                 "createdAt",
                 "asc"
             )
-
         );
-
 
     unsubscribeMessages =
         onSnapshot(
@@ -2397,13 +1930,10 @@ function loadMessages(){
 
                 box.innerHTML = "";
 
-
                 snapshot.forEach(
                     function(d){
 
-                        const data =
-                            d.data();
-
+                        const data = d.data();
 
                         const mine =
                             data.senderId ===
@@ -2412,7 +1942,6 @@ function loadMessages(){
                             data.receiverId ===
                             selectedUser.uid;
 
-
                         const theirs =
                             data.senderId ===
                             selectedUser.uid
@@ -2420,22 +1949,17 @@ function loadMessages(){
                             data.receiverId ===
                             currentProfile.uid;
 
-
                         if(
                             !mine &&
                             !theirs
                         ){
-
                             return;
-
                         }
-
 
                         const div =
                             document.createElement(
                                 "div"
                             );
-
 
                         div.className =
                             "message" +
@@ -2444,7 +1968,6 @@ function loadMessages(){
                                 ? " my-message"
                                 : ""
                             );
-
 
                         const time =
                             data.createdAt &&
@@ -2461,7 +1984,6 @@ function loadMessages(){
                                 )
 
                             : "";
-
 
                         div.innerHTML = `
 
@@ -2508,24 +2030,17 @@ function loadMessages(){
 
                         `;
 
-
-                        box.appendChild(
-                            div
-                        );
+                        box.appendChild(div);
 
                     }
                 );
 
-
-                if(
-                    !box.children.length
-                ){
+                if(!box.children.length){
 
                     box.innerHTML =
                         '<div class="no-chat">Say hello 👋</div>';
 
                 }
-
 
                 box.scrollTop =
                     box.scrollHeight;
@@ -2535,28 +2050,21 @@ function loadMessages(){
 
 }
 
-
 /* SEND MESSAGE */
 
-window.sendMessage =
-async function(){
+window.sendMessage = async function(){
 
     const input =
         document.getElementById(
             "messageInput"
         );
 
-
     const text =
         input.value.trim();
 
-
     if(!text){
-
         return;
-
     }
-
 
     if(!selectedUser){
 
@@ -2567,7 +2075,6 @@ async function(){
         return;
 
     }
-
 
     if(
         !(await areFriends(
@@ -2584,16 +2091,11 @@ async function(){
 
     }
 
-
     try{
 
         await addDoc(
-            collection(
-                db,
-                "messages"
-            ),
+            collection(db,"messages"),
             {
-
                 text:text,
 
                 senderId:
@@ -2609,11 +2111,8 @@ async function(){
                     selectedUser.email,
 
                 participants:[
-
                     currentProfile.uid,
-
                     selectedUser.uid
-
                 ],
 
                 createdAt:
@@ -2622,26 +2121,20 @@ async function(){
             }
         );
 
-
         input.value = "";
 
     }
-
     catch(error){
 
-        alert(
-            error.message
-        );
+        alert(error.message);
 
     }
 
 };
 
-
 /* EDIT MESSAGE */
 
-window.editMessage =
-async function(
+window.editMessage = async function(
     messageId,
     oldText
 ){
@@ -2652,24 +2145,16 @@ async function(
             oldText
         );
 
-
     if(newText === null){
-
         return;
-
     }
-
 
     const text =
         newText.trim();
 
-
     if(!text){
-
         return;
-
     }
-
 
     try{
 
@@ -2679,7 +2164,6 @@ async function(
                 "messages",
                 messageId
             ),
-
             {
                 text:text,
                 edited:true
@@ -2687,22 +2171,17 @@ async function(
         );
 
     }
-
     catch(error){
 
-        alert(
-            error.message
-        );
+        alert(error.message);
 
     }
 
 };
 
-
 /* DELETE MESSAGE */
 
-window.deleteMessage =
-async function(
+window.deleteMessage = async function(
     messageId
 ){
 
@@ -2711,11 +2190,8 @@ async function(
             "Delete this message?"
         )
     ){
-
         return;
-
     }
-
 
     try{
 
@@ -2728,64 +2204,46 @@ async function(
         );
 
     }
-
     catch(error){
 
-        alert(
-            error.message
-        );
+        alert(error.message);
 
     }
 
 };
-
 
 /* ENTER */
 
-window.handleEnter =
-function(event){
+window.handleEnter = function(event){
 
-    if(
-        event.key ===
-        "Enter"
-    ){
-
+    if(event.key === "Enter"){
         sendMessage();
-
     }
 
 };
 
-
 /* PROFILE */
 
-window.openProfile =
-async function(){
+window.openProfile = async function(){
 
     if(!currentProfile){
-
         return;
-
     }
-
 
     document.getElementById(
         "profileId"
     ).value =
         currentProfile.publicId || "";
 
-
     document.getElementById(
         "profileName"
     ).value =
         currentProfile.name || "";
 
-
     document.getElementById(
         "profileBio"
     ).value =
         currentProfile.bio || "";
-
 
     document.getElementById(
         "profileModal"
@@ -2794,11 +2252,9 @@ async function(){
 
 };
 
-
 /* CLOSE PROFILE */
 
-window.closeProfile =
-function(){
+window.closeProfile = function(){
 
     document.getElementById(
         "profileModal"
@@ -2807,23 +2263,19 @@ function(){
 
 };
 
-
 /* SAVE PROFILE */
 
-window.saveProfile =
-async function(){
+window.saveProfile = async function(){
 
     const name =
         document.getElementById(
             "profileName"
         ).value.trim();
 
-
     const bio =
         document.getElementById(
             "profileBio"
         ).value.trim();
-
 
     if(!name){
 
@@ -2835,7 +2287,6 @@ async function(){
 
     }
 
-
     try{
 
         await updateDoc(
@@ -2844,78 +2295,45 @@ async function(){
                 "users",
                 currentProfile.id
             ),
-
             {
                 name:name,
                 bio:bio
             }
         );
 
-
         currentProfile = {
-
             ...currentProfile,
-
             name:name,
-
             bio:bio
-
         };
 
-
         closeProfile();
-
 
         alert(
             "Profile saved ✅"
         );
 
-
         loadFriends();
 
     }
-
     catch(error){
 
-        alert(
-            error.message
-        );
+        alert(error.message);
 
     }
 
 };
-
 
 /* ESCAPE HTML */
 
 function escapeHtml(value){
 
     return String(value)
-
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
 
 }
 
