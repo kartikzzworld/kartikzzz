@@ -71,6 +71,9 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 .primary-action{background:linear-gradient(135deg,var(--red),#a9000b);border-color:var(--red);color:#fff}
 .home-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin-left:5px;border-radius:20px;background:#ff4a55;color:#fff;font-size:10px;font-weight:800}
 @media(max-width:700px){.presented-by{font-size:11px;margin-right:0}.home-actions-card{justify-content:stretch}.home-action{flex:1;min-width:145px}}
+
+/* SPIDER ADD FRIEND + REQUESTS PAGE */
+.spider-add-card{position:relative;max-width:900px;margin:0 auto 18px;padding:26px 28px;border:1px solid #3b2b32;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 90% 20%,rgba(227,27,35,.18),transparent 28%),linear-gradient(145deg,#17131a,#0d1016);box-shadow:0 15px 40px rgba(0,0,0,.3)}.spider-add-card:before,.spider-add-card:after{content:"";position:absolute;border:1px solid rgba(255,255,255,.09);border-radius:50%;pointer-events:none}.spider-add-card:before{width:230px;height:230px;right:-90px;top:-95px}.spider-add-card:after{width:170px;height:170px;left:-80px;bottom:-85px}.spider-add-content{position:relative;z-index:2;max-width:760px}.spider-kicker{font-size:10px;letter-spacing:2px;color:#ff5a63;font-weight:800}.spider-add-title{font-size:24px;font-weight:900;margin-top:5px}.spider-add-text{font-size:13px;color:#9aa3b0;margin:6px 0 16px}.spider-add-row{display:flex;gap:9px;align-items:center}.spider-add-row input{margin:0}.spider-add-row button{flex:0 0 auto}.spider-doodle{position:absolute;right:34px;bottom:12px;font-size:70px;opacity:.13;transform:rotate(-12deg)}.web-doodle{position:absolute;color:#ff4a55;opacity:.13;font-size:55px;font-weight:900;line-height:1}.web-one{right:0;top:12px;transform:rotate(45deg)}.web-two{left:-5px;bottom:5px;transform:rotate(-45deg)}.request-home-card{position:relative;max-width:900px;margin:0 auto 18px;padding:20px;border:1px solid #2d3542;border-radius:20px;background:linear-gradient(145deg,#151a23,#0d1016);display:flex;align-items:center;gap:14px;cursor:pointer;transition:.18s}.request-home-card:hover{transform:translateY(-2px);border-color:#ff4a55}.request-home-icon{font-size:27px}.request-arrow{margin-left:auto;font-size:24px;color:#ff4a55}.requests-page{height:calc(100% - 58px);padding:30px;overflow:auto;background:radial-gradient(circle at 80% 10%,rgba(227,27,35,.13),transparent 30%),#080b10}.requests-panel{max-width:900px;margin:0 auto;border:1px solid #2d3542;border-radius:22px;background:linear-gradient(145deg,#151a23,#0d1016);overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.28)}.requests-hero{padding:25px;display:flex;gap:16px;align-items:center;border-bottom:1px solid #2d3542;background:linear-gradient(135deg,rgba(227,27,35,.14),transparent)}.requests-icon{font-size:38px}.requests-title{font-size:24px;font-weight:900}.requests-subtitle{margin-top:5px;color:#8f98a6;font-size:13px}.requests-list{padding:10px}.requests-list .user{border-radius:12px;margin:5px 0;border:1px solid #252c38}@media(max-width:700px){.spider-add-card{padding:22px 18px}.spider-add-row{flex-direction:column;align-items:stretch}.spider-add-row button{width:100%}.spider-doodle{right:12px;font-size:55px}.requests-page{padding:16px}.requests-hero{padding:20px}}
 </style>
 </head>
 
@@ -155,6 +158,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
         <div class="presented-by">Presented by <b>Kartik</b></div>
         <button id="homeNav" class="main-nav active" onclick="showMainPage('home')">🏠 Home</button>
         <button id="messagesNav" class="main-nav" onclick="showMainPage('messages')">💬 Messages</button>
+        <button id="requestsNav" class="main-nav" onclick="showMainPage('requests')">📨 Requests <span id="topRequestBadge" class="home-badge" style="display:none">0</span></button>
     </div>
 
     <div id="homePage" class="home-page">
@@ -175,9 +179,28 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
             <button onclick="copyMyId()">📋 Copy ID</button>
         </div>
 
-        <div class="home-actions-card">
-            <button class="home-action primary-action" onclick="openAddFriendFromHome()">➕ Add Friend</button>
-            <button class="home-action" onclick="openRequestsFromHome()">📨 Friend Requests <span id="homeRequestBadge" class="home-badge" style="display:none">0</span></button>
+        <div class="spider-add-card">
+            <div class="web-doodle web-one">╲│╱</div>
+            <div class="web-doodle web-two">╱│╲</div>
+            <div class="spider-doodle">🕷</div>
+            <div class="spider-add-content">
+                <div class="spider-kicker">SPIDER NETWORK</div>
+                <div class="spider-add-title">Add a new friend</div>
+                <div class="spider-add-text">Enter their MyChatBox ID and send a friend request.</div>
+                <div class="spider-add-row">
+                    <input id="homeFriendId" placeholder="e.g. MCB123456">
+                    <button class="primary-action" onclick="sendHomeFriendRequest()">➕ Add Friend</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="request-home-card" onclick="openRequestsFromHome()">
+            <div class="request-home-icon">📨</div>
+            <div>
+                <div class="recommend-title">Friend Requests <span id="homeRequestBadge" class="home-badge" style="display:none">0</span></div>
+                <div class="recommend-text">Open your separate request page to accept or reject new friends.</div>
+            </div>
+            <div class="request-arrow">→</div>
         </div>
 
         <div class="recommend-card">
@@ -259,6 +282,21 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
     </div>
     </div>
 
+</div>
+
+<div id="requestsPage" class="requests-page" style="display:none">
+    <div class="requests-panel">
+        <div class="requests-hero">
+            <div class="requests-icon">🕷️</div>
+            <div>
+                <div class="requests-title">Friend Requests</div>
+                <div class="requests-subtitle">People who want to join your friend network.</div>
+            </div>
+        </div>
+        <div id="requestsList" class="requests-list">
+            <div class="empty">Loading requests...</div>
+        </div>
+    </div>
 </div>
 
 <div
@@ -982,18 +1020,12 @@ function loadRequests(){
                     homeBadge.style.display = snapshot.size ? "inline-block" : "none";
                 }
 
-                if(
-                    document
-                    .getElementById("requestsTab")
-                    .classList
-                    .contains("active")
-                ){
+                const topBadge = document.getElementById("topRequestBadge");
+                if(topBadge){ topBadge.innerText = snapshot.size; topBadge.style.display = snapshot.size ? "inline-flex" : "none"; }
+                const requestsPage = document.getElementById("requestsPage");
+                if(requestsPage && requestsPage.style.display !== "none"){ renderRequests(snapshot); }
 
-                    renderRequests(snapshot);
-
-                }
-
-            }
+}
         );
 
 }
@@ -1004,7 +1036,7 @@ function renderRequests(snapshot){
 
     const list =
         document.getElementById(
-            "usersList"
+            "requestsList"
         );
 
     list.innerHTML = "";
@@ -1325,37 +1357,11 @@ function renderFriends(users){
 
             div.innerHTML = `
 
-                <div class="avatar">
-                    ${(user.name || user.email)
-                        .charAt(0)
-                        .toUpperCase()}
-                </div>
+                <div class="avatar">🕷</div>
 
                 <div class="user-info">
-
-                    <div class="user-name">
-                        ${escapeHtml(
-                            user.name ||
-                            user.email
-                        )}
-                    </div>
-
-                    <div class="user-meta">
-
-                        ${
-                            user.online
-                            ? "🟢 Online"
-                            : "⚫ Offline"
-                        }
-
-                        ·
-
-                        ${escapeHtml(
-                            user.publicId || ""
-                        )}
-
-                    </div>
-
+                    <div class="user-name">${escapeHtml(user.publicId || "Unknown ID")}</div>
+                    <div class="user-meta">${user.online ? "🟢 Online" : "⚫ Offline"}</div>
                 </div>
 
             `;
@@ -1409,54 +1415,32 @@ window.filterFriends = function(){
 window.showMainPage = function(page){
     const home = document.getElementById("homePage");
     const messages = document.getElementById("messagesPage");
+    const requests = document.getElementById("requestsPage");
     const homeNav = document.getElementById("homeNav");
     const messagesNav = document.getElementById("messagesNav");
+    const requestsNav = document.getElementById("requestsNav");
+    home.style.display = page === "home" ? "block" : "none";
+    messages.style.display = page === "messages" ? "block" : "none";
+    requests.style.display = page === "requests" ? "block" : "none";
+    homeNav.classList.toggle("active", page === "home");
+    messagesNav.classList.toggle("active", page === "messages");
+    requestsNav.classList.toggle("active", page === "requests");
+    if(page === "requests" && currentProfile) loadRequests();
+};
 
-    if(page === "home"){
-        home.style.display = "block";
-        messages.style.display = "none";
-        homeNav.classList.add("active");
-        messagesNav.classList.remove("active");
-    } else {
-        home.style.display = "none";
-        messages.style.display = "block";
-        homeNav.classList.remove("active");
-        messagesNav.classList.add("active");
-    }
+window.sendHomeFriendRequest = function(){
+    const input = document.getElementById("homeFriendId");
+    if(!input) return;
+    const cleanId = input.value.trim().toUpperCase();
+    if(!cleanId){ alert("Please enter a MyChatBox ID."); return; }
+    sendFriendRequestById(cleanId).then(function(){ input.value = ""; });
 };
 
 window.openAddFriendFromHome = function(){
-    if(!currentProfile) return;
-
-    const publicId = prompt("Enter the MyChatBox ID of the person you want to add:");
-
-    if(publicId === null) return;
-
-    const cleanId = publicId.trim().toUpperCase();
-
-    if(!cleanId){
-        alert("Please enter a MyChatBox ID.");
-        return;
-    }
-
-    if(cleanId === currentProfile.publicId){
-        alert("You cannot add yourself.");
-        return;
-    }
-
-    sendFriendRequestById(cleanId);
+    const input = document.getElementById("homeFriendId");
+    if(input){ input.focus(); input.scrollIntoView({behavior:"smooth",block:"center"}); }
 };
-
-window.openRequestsFromHome = function(){
-    showMainPage("messages");
-    setTimeout(function(){
-        showTab("requests");
-        const list = document.getElementById("usersList");
-        if(list){
-            list.scrollIntoView({behavior:"smooth", block:"center"});
-        }
-    }, 80);
-};
+window.openRequestsFromHome = function(){ showMainPage("requests"); };
 
 window.copyMyId = async function(){
     if(!currentProfile || !currentProfile.publicId) return;
@@ -1478,43 +1462,8 @@ function updateHomeProfile(){
 /* TABS */
 
 window.showTab = function(tab){
-
-    const friendsControls = document.getElementById("friendsControls");
-
-    if(tab === "friends"){
-
-        if(friendsControls){
-            friendsControls.style.display = "block";
-        }
-
-        renderFriends(allFriends);
-
-    } else {
-
-        if(friendsControls){
-            friendsControls.style.display = "none";
-        }
-
-        const q =
-            query(
-                collection(db,"friendRequests"),
-                where(
-                    "toUid",
-                    "==",
-                    currentProfile.uid
-                ),
-                where(
-                    "status",
-                    "==",
-                    "pending"
-                )
-            );
-
-        getDocs(q)
-            .then(renderRequests);
-
-    }
-
+    if(tab === "requests") showMainPage("requests");
+    else showMainPage("messages");
 };
 
 /* SELECT FRIEND */
