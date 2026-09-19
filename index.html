@@ -74,6 +74,29 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 
 /* SPIDER ADD FRIEND + REQUESTS PAGE */
 .spider-add-card{position:relative;max-width:900px;margin:0 auto 18px;padding:26px 28px;border:1px solid #3b2b32;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 90% 20%,rgba(227,27,35,.18),transparent 28%),linear-gradient(145deg,#17131a,#0d1016);box-shadow:0 15px 40px rgba(0,0,0,.3)}.spider-add-card:before,.spider-add-card:after{content:"";position:absolute;border:1px solid rgba(255,255,255,.09);border-radius:50%;pointer-events:none}.spider-add-card:before{width:230px;height:230px;right:-90px;top:-95px}.spider-add-card:after{width:170px;height:170px;left:-80px;bottom:-85px}.spider-add-content{position:relative;z-index:2;max-width:760px}.spider-kicker{font-size:10px;letter-spacing:2px;color:#ff5a63;font-weight:800}.spider-add-title{font-size:24px;font-weight:900;margin-top:5px}.spider-add-text{font-size:13px;color:#9aa3b0;margin:6px 0 16px}.spider-add-row{display:flex;gap:9px;align-items:center}.spider-add-row input{margin:0}.spider-add-row button{flex:0 0 auto}.spider-doodle{position:absolute;right:34px;bottom:12px;font-size:70px;opacity:.13;transform:rotate(-12deg)}.web-doodle{position:absolute;color:#ff4a55;opacity:.13;font-size:55px;font-weight:900;line-height:1}.web-one{right:0;top:12px;transform:rotate(45deg)}.web-two{left:-5px;bottom:5px;transform:rotate(-45deg)}.request-home-card{position:relative;max-width:900px;margin:0 auto 18px;padding:20px;border:1px solid #2d3542;border-radius:20px;background:linear-gradient(145deg,#151a23,#0d1016);display:flex;align-items:center;gap:14px;cursor:pointer;transition:.18s}.request-home-card:hover{transform:translateY(-2px);border-color:#ff4a55}.request-home-icon{font-size:27px}.request-arrow{margin-left:auto;font-size:24px;color:#ff4a55}.requests-page{height:calc(100% - 58px);padding:30px;overflow:auto;background:radial-gradient(circle at 80% 10%,rgba(227,27,35,.13),transparent 30%),#080b10}.requests-panel{max-width:900px;margin:0 auto;border:1px solid #2d3542;border-radius:22px;background:linear-gradient(145deg,#151a23,#0d1016);overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.28)}.requests-hero{padding:25px;display:flex;gap:16px;align-items:center;border-bottom:1px solid #2d3542;background:linear-gradient(135deg,rgba(227,27,35,.14),transparent)}.requests-icon{font-size:38px}.requests-title{font-size:24px;font-weight:900}.requests-subtitle{margin-top:5px;color:#8f98a6;font-size:13px}.requests-list{padding:10px}.requests-list .user{border-radius:12px;margin:5px 0;border:1px solid #252c38}@media(max-width:700px){.spider-add-card{padding:22px 18px}.spider-add-row{flex-direction:column;align-items:stretch}.spider-add-row button{width:100%}.spider-doodle{right:12px;font-size:55px}.requests-page{padding:16px}.requests-hero{padding:20px}}
+
+/* FRIEND REQUEST PAGE - SPIDER DOODLE */
+.requests-page{position:relative;}
+.requests-page:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(35deg,transparent 48%,#ff3b46 49%,transparent 51%),linear-gradient(-35deg,transparent 48%,#ff3b46 49%,transparent 51%);background-size:210px 210px;}
+.request-doodle-bg{position:absolute;color:#ff3b46;opacity:.12;font-size:170px;line-height:1;pointer-events:none;}
+.doodle-web-left{left:-55px;top:70px;transform:rotate(20deg)}
+.doodle-web-right{right:-55px;bottom:45px;transform:rotate(-20deg)}
+.spider-request-hero{position:relative;min-height:180px;overflow:hidden;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 45%,rgba(227,27,35,.18),transparent 35%),linear-gradient(145deg,#17131a,#0d1016);}
+.spider-request-hero:before,.spider-request-hero:after{content:"";position:absolute;border:1px solid rgba(255,65,75,.22);border-radius:50%;pointer-events:none;}
+.spider-request-hero:before{width:270px;height:270px;left:50%;top:50%;transform:translate(-50%,-50%);}
+.spider-request-hero:after{width:390px;height:390px;left:50%;top:50%;transform:translate(-50%,-50%);}
+.spider-doodle-big{position:absolute;left:50%;top:50%;transform:translate(-50%,-48%);font-size:92px;opacity:.13;filter:grayscale(1);}
+.requests-hero-text{position:relative;z-index:3;max-width:560px;}
+.requests-kicker{font-size:10px;letter-spacing:3px;font-weight:900;color:#ff4a55;margin-bottom:6px;}
+.requests-title{font-size:30px;font-weight:900;text-shadow:0 0 20px rgba(255,50,60,.18);}
+.requests-subtitle{margin-top:8px;color:#a0a8b5;font-size:13px;}
+.web-lines{position:absolute;z-index:2;color:#ff4a55;opacity:.28;font-size:30px;line-height:1.05;white-space:pre;}
+.web-lines-left{left:18px;top:18px;transform:rotate(-18deg)}
+.web-lines-right{right:18px;bottom:18px;transform:rotate(18deg)}
+.request-page-label{padding:16px 18px 8px;color:#7f8998;font-size:10px;font-weight:800;letter-spacing:2px;}
+.requests-list{position:relative;z-index:2;}
+.requests-list .user{background:rgba(20,24,32,.9);}
+@media(max-width:700px){.spider-request-hero{min-height:160px}.requests-title{font-size:24px}.spider-doodle-big{font-size:75px}.web-lines{font-size:23px}.doodle-web-left{left:-85px}.doodle-web-right{right:-85px}}
 </style>
 </head>
 
@@ -285,14 +308,22 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 </div>
 
 <div id="requestsPage" class="requests-page" style="display:none">
+    <div class="request-doodle-bg doodle-web-left">✣</div>
+    <div class="request-doodle-bg doodle-web-right">✣</div>
+
     <div class="requests-panel">
-        <div class="requests-hero">
-            <div class="requests-icon">🕷️</div>
-            <div>
+        <div class="requests-hero spider-request-hero">
+            <div class="web-lines web-lines-left">╲│╱<br>─●─<br>╱│╲</div>
+            <div class="spider-doodle-big">🕷️</div>
+            <div class="requests-hero-text">
+                <div class="requests-kicker">SPIDER NETWORK</div>
                 <div class="requests-title">Friend Requests</div>
-                <div class="requests-subtitle">People who want to join your friend network.</div>
+                <div class="requests-subtitle">Your incoming friend requests — accept or reject them here.</div>
             </div>
+            <div class="web-lines web-lines-right">╲│╱<br>─●─<br>╱│╲</div>
         </div>
+
+        <div class="request-page-label">INCOMING REQUESTS</div>
         <div id="requestsList" class="requests-list">
             <div class="empty">Loading requests...</div>
         </div>
