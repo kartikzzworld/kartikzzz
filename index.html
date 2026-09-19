@@ -97,6 +97,24 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 .requests-list{position:relative;z-index:2;}
 .requests-list .user{background:rgba(20,24,32,.9);}
 @media(max-width:700px){.spider-request-hero{min-height:160px}.requests-title{font-size:24px}.spider-doodle-big{font-size:75px}.web-lines{font-size:23px}.doodle-web-left{left:-85px}.doodle-web-right{right:-85px}}
+
+/* Animated Spider-Web effect for Add Friend card */
+.spider-add-card{isolation:isolate}
+.spider-add-card:before{animation:webPulse 3s ease-in-out infinite}
+.spider-add-card:after{animation:webPulse 4s ease-in-out infinite reverse}
+.animated-web{position:absolute;width:250px;height:250px;border:1px solid rgba(255,74,85,.20);border-radius:50%;pointer-events:none;z-index:0;animation:webRotate 14s linear infinite}
+.animated-web:before,.animated-web:after{content:"";position:absolute;inset:12%;border:1px solid rgba(255,255,255,.09);border-radius:50%}
+.animated-web:after{inset:25%;border-color:rgba(255,74,85,.14)}
+.web-bg-1{right:-115px;top:-105px}
+.web-bg-2{left:-125px;bottom:-115px;width:220px;height:220px;animation-duration:18s;animation-direction:reverse}
+.web-lines{position:absolute;width:190px;height:190px;border-radius:50%;pointer-events:none;z-index:0;background:repeating-conic-gradient(from 0deg,rgba(255,74,85,.14) 0deg 1deg,transparent 1deg 45deg);-webkit-mask:radial-gradient(circle,transparent 0 18%,#000 19% 20%,transparent 21% 38%,#000 39% 40%,transparent 41% 58%,#000 59% 60%,transparent 61%)}
+.web-lines-1{right:-85px;top:-75px;animation:webSpin 12s linear infinite}
+.web-lines-2{left:-95px;bottom:-85px;animation:webSpin 16s linear infinite reverse}
+.spider-add-content,.spider-doodle{z-index:2}
+@keyframes webRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes webSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes webPulse{0%,100%{opacity:.65}50%{opacity:1}}
+.spider-add-row input:focus{border-color:#ff4a55!important;box-shadow:0 0 0 3px rgba(227,27,35,.12),0 0 18px rgba(227,27,35,.12)}
 </style>
 </head>
 
@@ -203,6 +221,10 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
         </div>
 
         <div class="spider-add-card">
+            <div class="animated-web web-bg-1"></div>
+            <div class="animated-web web-bg-2"></div>
+            <div class="web-lines web-lines-1"></div>
+            <div class="web-lines web-lines-2"></div>
             <div class="web-doodle web-one">╲│╱</div>
             <div class="web-doodle web-two">╱│╲</div>
             <div class="spider-doodle">🕷</div>
