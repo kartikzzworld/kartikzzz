@@ -61,6 +61,16 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 .messages-page{height:calc(100% - 58px)}
 .message-actions{display:flex;justify-content:flex-end;gap:5px;margin-top:7px;opacity:.9}.message-actions button{padding:5px 8px;font-size:10px;border-radius:7px;box-shadow:none;background:#2a303b}.message-actions .delete-btn{background:#6f1118}.edited-label{font-size:9px;opacity:.55;margin-left:5px}
 @media(max-width:700px){.main-tabs{justify-content:center}.main-nav{flex:1;padding:8px 10px}.home-page{padding:16px}.hero-card{padding:20px}.hero-title{font-size:21px}.id-card{align-items:flex-start;flex-direction:column}.id-card button{width:100%}.big-id{font-size:25px}}
+
+/* HOME ACTIONS + PRESENTED BY */
+.presented-by{font-size:12px;color:#7f8998;margin-right:8px;white-space:nowrap;text-shadow:0 0 10px rgba(227,27,35,.18)}
+.presented-by b{color:#ff4a55}
+.home-actions-card{max-width:900px;margin:0 auto 18px;display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+.home-action{padding:12px 20px;border:1px solid #343d4b;border-radius:12px;background:#171c25;color:#d9dee6;box-shadow:0 8px 20px rgba(0,0,0,.18);font-weight:700;cursor:pointer}
+.home-action:hover{transform:translateY(-1px);border-color:#ff4a55}
+.primary-action{background:linear-gradient(135deg,var(--red),#a9000b);border-color:var(--red);color:#fff}
+.home-badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;margin-left:5px;border-radius:20px;background:#ff4a55;color:#fff;font-size:10px;font-weight:800}
+@media(max-width:700px){.presented-by{font-size:11px;margin-right:0}.home-actions-card{justify-content:stretch}.home-action{flex:1;min-width:145px}}
 </style>
 </head>
 
@@ -142,6 +152,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
     </div>
 
     <div class="main-tabs">
+        <div class="presented-by">Presented by <b>Kartik</b></div>
         <button id="homeNav" class="main-nav active" onclick="showMainPage('home')">🏠 Home</button>
         <button id="messagesNav" class="main-nav" onclick="showMainPage('messages')">💬 Messages</button>
     </div>
@@ -162,6 +173,11 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
                 <div class="id-help">Share this ID with someone so they can send you a friend request.</div>
             </div>
             <button onclick="copyMyId()">📋 Copy ID</button>
+        </div>
+
+        <div class="home-actions-card">
+            <button class="home-action primary-action" onclick="openAddFriendFromHome()">➕ Add Friend</button>
+            <button class="home-action" onclick="openRequestsFromHome()">📨 Friend Requests <span id="homeRequestBadge" class="home-badge" style="display:none">0</span></button>
         </div>
 
         <div class="recommend-card">
@@ -1024,6 +1040,12 @@ function loadRequests(){
                     ? "inline-block"
                     : "none";
 
+                const homeBadge = document.getElementById("homeRequestBadge");
+                if(homeBadge){
+                    homeBadge.innerText = snapshot.size;
+                    homeBadge.style.display = snapshot.size ? "inline-block" : "none";
+                }
+
                 if(
                     document
                     .getElementById("requestsTab")
@@ -1465,6 +1487,29 @@ window.showMainPage = function(page){
         homeNav.classList.remove("active");
         messagesNav.classList.add("active");
     }
+};
+
+window.openAddFriendFromHome = function(){
+    showMainPage("messages");
+    setTimeout(function(){
+        showTab("friends");
+        const input = document.getElementById("friendIdInput");
+        if(input){
+            input.focus();
+            input.scrollIntoView({behavior:"smooth", block:"center"});
+        }
+    }, 80);
+};
+
+window.openRequestsFromHome = function(){
+    showMainPage("messages");
+    setTimeout(function(){
+        showTab("requests");
+        const list = document.getElementById("usersList");
+        if(list){
+            list.scrollIntoView({behavior:"smooth", block:"center"});
+        }
+    }, 80);
 };
 
 window.copyMyId = async function(){
