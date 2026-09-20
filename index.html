@@ -138,6 +138,8 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 
 /* PROFILE PAGE */
 
+.know-more-page{position:fixed;inset:0;z-index:39;background:#050608;overflow:auto;padding:22px;display:none;opacity:0;transform:translateX(28px);transition:opacity .28s ease,transform .28s ease;background-image:radial-gradient(circle at 80% 10%,rgba(227,27,35,.16),transparent 30%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:auto,42px 42px,42px 42px}.know-more-page.show{opacity:1;transform:translateX(0)}.know-more-shell{width:100%;max-width:760px;margin:0 auto}.know-more-top{display:flex;align-items:center;gap:12px;margin-bottom:20px}.know-more-top h2{margin:0;font-size:22px}.know-hero{display:flex;align-items:center;gap:18px;padding:24px;border:1px solid #2d3542;border-radius:22px;background:linear-gradient(145deg,#151a23,#0d1016);box-shadow:0 15px 40px rgba(0,0,0,.3)}.know-logo{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(145deg,#e31b23,#111);font-size:30px;box-shadow:0 0 25px rgba(227,27,35,.25)}.know-hero h1{margin:2px 0 6px;font-size:28px}.know-hero p{margin:0;color:#aeb7c6;line-height:1.5}.know-section{margin-top:18px;padding:20px;border:1px solid #242c38;border-radius:20px;background:#0d1016}.know-section h3{margin:0 0 14px}.know-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.know-info-card,.know-contact-card{padding:15px;border:1px solid #2a3340;border-radius:14px;background:#121720}.know-info-card b{display:block;margin-bottom:6px}.know-info-card span{display:block;color:#9fa9b8;font-size:13px;line-height:1.45}.know-contact-card{margin-top:10px}.know-contact-card a{display:inline-block;margin-top:5px;color:#ff5961;text-decoration:none;font-weight:600}.know-note p{color:#9fa9b8;line-height:1.5;margin:0}@media(max-width:600px){.know-info-grid{grid-template-columns:1fr}.know-hero{align-items:flex-start}}
+
 .profile-update-page{position:fixed;inset:0;z-index:40;background:#050608;overflow:auto;padding:22px;display:none;opacity:0;transform:translateX(28px);transition:opacity .28s ease,transform .28s ease;background-image:radial-gradient(circle at 20% 10%,rgba(227,27,35,.16),transparent 30%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:auto,42px 42px,42px 42px}
 .profile-update-page.show{opacity:1;transform:translateX(0)}
 .profile-update-shell{width:100%;max-width:700px;margin:0 auto}.profile-update-top{display:flex;align-items:center;gap:12px;margin-bottom:20px}.profile-update-top h2{margin:0;font-size:22px}.profile-update-card{padding:22px;border:1px solid #2d3542;border-radius:20px;background:linear-gradient(145deg,#151a23,#0d1016);box-shadow:0 15px 40px rgba(0,0,0,.3)}
@@ -546,19 +548,51 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
     </div>
 </div>
 
-<div class="modal" id="knowMoreModal">
-    <div class="modal-box">
-        <h2>ℹ️ Know More</h2>
-        <div class="know-card">
-            <div class="know-label">MY INSTAGRAM</div>
-            <a href="https://instagram.com/lft.kartik5_" target="_blank" rel="noopener">@lft.kartik5_</a>
-        </div>
-        <div class="know-card">
-            <div class="know-label">TECHNICAL SUPPORT</div>
-            <a href="mailto:kartikkv21845@gmail.com">kartikkv21845@gmail.com</a>
-        </div>
-        <button class="secondary" style="width:100%;margin-top:10px" onclick="closeKnowMore()">Close</button>
+<div id="knowMorePage" class="know-more-page">
+  <div class="know-more-shell">
+    <div class="know-more-top">
+      <button class="secondary" onclick="closeKnowMore()">← Back</button>
+      <h2>ℹ️ Know More</h2>
     </div>
+
+    <div class="know-hero">
+      <div class="know-logo">💬</div>
+      <div>
+        <div class="profile-kicker">ABOUT</div>
+        <h1>MyChatBox</h1>
+        <p>Simple and private-style chatting with friends using your unique MyChatBox ID.</p>
+      </div>
+    </div>
+
+    <div class="know-section">
+      <h3>✨ MyChatBox Features</h3>
+      <div class="know-info-grid">
+        <div class="know-info-card"><b>👤 Profile</b><span>Set and update your name and bio.</span></div>
+        <div class="know-info-card"><b>🆔 MyChatBox ID</b><span>Every account has a unique public ID.</span></div>
+        <div class="know-info-card"><b>🤝 Friends</b><span>Add friends using their MyChatBox ID.</span></div>
+        <div class="know-info-card"><b>💬 Messaging</b><span>Chat with your accepted friends.</span></div>
+        <div class="know-info-card"><b>🔐 Account</b><span>Login, logout and password update options.</span></div>
+        <div class="know-info-card"><b>🚫 Block</b><span>Currently under maintenance.</span></div>
+      </div>
+    </div>
+
+    <div class="know-section">
+      <h3>👨‍💻 Presented by Kartik</h3>
+      <div class="know-contact-card">
+        <div class="know-label">INSTAGRAM</div>
+        <a href="https://instagram.com/lft.kartik5_" target="_blank" rel="noopener">@lft.kartik5_ ↗</a>
+      </div>
+      <div class="know-contact-card">
+        <div class="know-label">TECHNICAL SUPPORT</div>
+        <a href="mailto:kartikkv21845@gmail.com">kartikkv21845@gmail.com</a>
+      </div>
+    </div>
+
+    <div class="know-section know-note">
+      <h3>🛠️ Current Status</h3>
+      <p>MyChatBox is an ongoing project. Some features may be added or improved over time.</p>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -2097,10 +2131,14 @@ window.closeSettings = function(){
     document.getElementById("settingsModal").style.display = "none";
 };
 window.openKnowMore = function(){
-    document.getElementById("knowMoreModal").style.display = "flex";
+    const page = document.getElementById("knowMorePage");
+    page.style.display = "block";
+    requestAnimationFrame(function(){ page.classList.add("show"); });
 };
 window.closeKnowMore = function(){
-    document.getElementById("knowMoreModal").style.display = "none";
+    const page = document.getElementById("knowMorePage");
+    page.classList.remove("show");
+    setTimeout(function(){ page.style.display = "none"; }, 280);
 };
 window.showBlockMaintenance = function(){
     alert("Block option is currently Under Maintenance 🛠️");
