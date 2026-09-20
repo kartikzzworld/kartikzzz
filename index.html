@@ -4,7 +4,26 @@
     <meta name="google-site-verification" content="F2QnvKb4RFATX2xjw-kfLz6LD1qBrDITIm6k8neEiJs" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyChatBox</title>
+<title>MyChatBox - Connect, Chat & Make Friends Online</title>
+<meta name="description" content="MyChatBox is a simple online chat and friends platform where you can connect with friends, send private messages, manage friend requests, and chat securely.">
+<meta name="keywords" content="MyChatBox, online chat, private chat, chat with friends, make friends online, messaging, friends app">
+<meta name="author" content="Kartik">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#e31b23">
+<link rel="canonical" href="https://kartikvv18.github.io/MyChatBox/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="MyChatBox - Connect, Chat & Make Friends Online">
+<meta property="og:description" content="Connect with friends, send private messages, manage friend requests, and chat on MyChatBox.">
+<meta property="og:url" content="https://kartikvv18.github.io/MyChatBox/">
+<meta property="og:site_name" content="MyChatBox">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MyChatBox - Connect, Chat & Make Friends Online">
+<meta name="twitter:description" content="Connect with friends, send private messages, manage friend requests, and chat on MyChatBox.">
+
+<meta name="application-name" content="MyChatBox">
+<meta name="apple-mobile-web-app-title" content="MyChatBox">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
@@ -117,19 +136,9 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 @keyframes webPulse{0%,100%{opacity:.65}50%{opacity:1}}
 .spider-add-row input:focus{border-color:#ff4a55!important;box-shadow:0 0 0 3px rgba(227,27,35,.12),0 0 18px rgba(227,27,35,.12)}
 
-
-/* SPIDER-WEB CURSOR TRAIL */
-#spiderWebTrail{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-    z-index:99999;
-}
-@media (pointer:coarse), (prefers-reduced-motion:reduce){
-    #spiderWebTrail{display:none}
-}
+/* PROFILE PAGE */
+.profile-page{position:fixed;inset:0;z-index:30;background:#050608;overflow:auto;padding:22px;background-image:radial-gradient(circle at 20% 10%,rgba(227,27,35,.16),transparent 30%),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:auto,42px 42px,42px 42px}
+.profile-shell{width:100%;max-width:820px;margin:0 auto}.profile-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}.profile-page-title{font-size:22px;font-weight:900}.profile-topbar .secondary{background:#171c25;color:#fff;border:1px solid #343b48;box-shadow:none}.profile-hero{display:flex;align-items:center;gap:16px;padding:25px;border:1px solid #3b2b32;border-radius:22px;background:linear-gradient(145deg,#17131a,#0d1016);box-shadow:0 15px 40px rgba(0,0,0,.3);margin-bottom:16px}.profile-avatar{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--red),#8b0008);font-size:30px;font-weight:900;box-shadow:0 0 0 3px #24181b,0 0 25px rgba(227,27,35,.28)}.profile-kicker{font-size:10px;letter-spacing:2px;color:#ff5a63;font-weight:800}.profile-page-name{font-size:28px;font-weight:900;margin-top:3px}.profile-page-id{font-size:12px;color:#8f98a6;margin-top:5px}.profile-menu{display:grid;gap:10px}.profile-menu-card{width:100%;display:flex;align-items:center;text-align:left;gap:13px;padding:16px;border:1px solid #2d3542;border-radius:16px;background:linear-gradient(145deg,#151a23,#0d1016);box-shadow:0 8px 22px rgba(0,0,0,.18);color:#fff}.profile-menu-card:hover{border-color:#ff4a55}.profile-menu-card>span:nth-child(2){flex:1}.profile-menu-card b{display:block;font-size:15px}.profile-menu-card small{display:block;color:#8f98a6;font-size:11px;margin-top:3px}.profile-menu-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:#21151a;font-size:20px}.profile-arrow{color:#ff4a55;font-size:22px}.maintenance{cursor:pointer}.maintenance-badge{font-size:9px!important;color:#ff6870!important;border:1px solid #5a2930;border-radius:20px;padding:5px 8px;background:#261318}.logout-card{border-color:#3f252a}.settings-note{font-size:13px;color:#9ca3af;line-height:1.5}.know-card{margin-top:10px;padding:13px;border:1px solid #2d3542;border-radius:12px;background:#0d1118}.know-label{font-size:10px;letter-spacing:1.5px;color:#7f8998;font-weight:800;margin-bottom:5px}.know-card a{color:#ff6870;text-decoration:none;font-weight:700}.know-card a:hover{text-decoration:underline}@media(max-width:700px){.profile-page{padding:14px}.profile-page-title{font-size:18px}.profile-topbar button{padding:9px 10px}.profile-hero{padding:20px}.profile-page-name{font-size:23px}.profile-avatar{width:64px;height:64px;font-size:25px}.maintenance-badge{display:none!important}}
 
 </style>
 </head>
@@ -199,7 +208,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 
         <div>
 
-            <button onclick="openProfile()">
+            <button onclick="openProfilePage()">
                 👤 Profile
             </button>
 
@@ -407,6 +416,22 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
             placeholder="Write something about yourself..."
         ></textarea>
 
+        <label>Current Password <span style="color:#7f8998;font-weight:normal">(only if changing password)</span></label>
+        <input
+            id="currentPassword"
+            type="password"
+            placeholder="Enter current password"
+            autocomplete="current-password"
+        >
+
+        <label>New Password <span style="color:#7f8998;font-weight:normal">(optional)</span></label>
+        <input
+            id="newPassword"
+            type="password"
+            placeholder="Enter new password"
+            autocomplete="new-password"
+        >
+
         <div class="modal-actions">
 
             <button onclick="saveProfile()">
@@ -426,6 +451,82 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 
 </div>
 
+
+<div id="profilePage" class="profile-page" style="display:none">
+    <div class="profile-shell">
+        <div class="profile-topbar">
+            <button class="secondary" onclick="backToMain()">← Back</button>
+            <div class="profile-page-title">👤 My Profile</div>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <div class="profile-hero">
+            <div class="profile-avatar" id="profilePageAvatar">K</div>
+            <div>
+                <div class="profile-kicker">MYCHATBOX PROFILE</div>
+                <div class="profile-page-name" id="profilePageName">Your Name</div>
+                <div class="profile-page-id" id="profilePageId">MCB------</div>
+            </div>
+        </div>
+
+        <div class="profile-menu">
+            <button class="profile-menu-card" onclick="openProfileUpdate()">
+                <span class="profile-menu-icon">✏️</span>
+                <span><b>Profile Update</b><small>Change name, bio and password</small></span>
+                <span class="profile-arrow">→</span>
+            </button>
+
+            <button class="profile-menu-card" onclick="openSettings()">
+                <span class="profile-menu-icon">⚙️</span>
+                <span><b>Settings</b><small>Account and security settings</small></span>
+                <span class="profile-arrow">→</span>
+            </button>
+
+            <button class="profile-menu-card maintenance" onclick="showBlockMaintenance()">
+                <span class="profile-menu-icon">🚫</span>
+                <span><b>Block</b><small>Under Maintenance</small></span>
+                <span class="maintenance-badge">UNDER MAINTENANCE</span>
+            </button>
+
+            <button class="profile-menu-card" onclick="openKnowMore()">
+                <span class="profile-menu-icon">ℹ️</span>
+                <span><b>Know More</b><small>About MyChatBox and technical support</small></span>
+                <span class="profile-arrow">→</span>
+            </button>
+
+            <button class="profile-menu-card logout-card" onclick="logout()">
+                <span class="profile-menu-icon">🚪</span>
+                <span><b>Logout</b><small>Sign out from this account</small></span>
+                <span class="profile-arrow">→</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="settingsModal">
+    <div class="modal-box">
+        <h2>⚙️ Settings</h2>
+        <p class="settings-note">Your account and security options are available here.</p>
+        <button style="width:100%;margin-top:12px" onclick="openProfileUpdate();closeSettings()">✏️ Profile Update</button>
+        <button class="secondary" style="width:100%;margin-top:8px" onclick="closeSettings()">Close</button>
+    </div>
+</div>
+
+<div class="modal" id="knowMoreModal">
+    <div class="modal-box">
+        <h2>ℹ️ Know More</h2>
+        <div class="know-card">
+            <div class="know-label">MY INSTAGRAM</div>
+            <a href="https://instagram.com/lft.kartik5_" target="_blank" rel="noopener">@lft.kartik5_</a>
+        </div>
+        <div class="know-card">
+            <div class="know-label">TECHNICAL SUPPORT</div>
+            <a href="mailto:kartikkv21845@gmail.com">kartikkv21845@gmail.com</a>
+        </div>
+        <button class="secondary" style="width:100%;margin-top:10px" onclick="closeKnowMore()">Close</button>
+    </div>
+</div>
+
 <script type="module">
 
 import {
@@ -440,6 +541,9 @@ import {
     signOut,
     onAuthStateChanged,
     sendPasswordResetEmail,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword,
     setPersistence,
     browserLocalPersistence
 }
@@ -671,9 +775,9 @@ async function ensureMyProfile(){
                 await createUniquePublicId();
         }
 
-        if(!profile.name){
-            updates.name =
-                user.email.split("@")[0];
+        // A profile name must be chosen by the user.
+        if(profile.name === user.email.split("@")[0]){
+            updates.name = "";
         }
 
         updates.online = true;
@@ -749,7 +853,7 @@ window.signup = async function(){
             {
                 uid:result.user.uid,
                 email:email,
-                name:email.split("@")[0],
+                name:"",
                 bio:"",
                 publicId:publicId,
                 online:true,
@@ -850,6 +954,14 @@ onAuthStateChanged(
                 loadFriends();
 
                 loadRequests();
+
+                // Require every user to choose a unique public name.
+                if(!currentProfile.name){
+                    setTimeout(function(){
+                        openProfile();
+                        alert("Please set your unique name in Profile before using MyChatBox.");
+                    }, 250);
+                }
 
             }
             catch(error){
@@ -1429,7 +1541,7 @@ function renderFriends(users){
                 <div class="avatar">🕷</div>
 
                 <div class="user-info">
-                    <div class="user-name">${escapeHtml(user.publicId || "Unknown ID")}</div>
+                    <div class="user-name">${escapeHtml(user.name || "Name not set")}</div>
                     <div class="user-meta">${user.online ? "🟢 Online" : "⚫ Offline"}</div>
                 </div>
 
@@ -1896,37 +2008,69 @@ window.handleEnter = function(event){
 
 /* PROFILE */
 
-window.openProfile = async function(){
-
-    if(!currentProfile){
-        return;
-    }
-
-    document.getElementById(
-        "profileId"
-    ).value =
-        currentProfile.publicId || "";
-
-    document.getElementById(
-        "profileName"
-    ).value =
-        currentProfile.name || "";
-
-    document.getElementById(
-        "profileBio"
-    ).value =
-        currentProfile.bio || "";
-
-    document.getElementById(
-        "profileModal"
-    ).style.display =
-        "flex";
-
+window.openProfilePage = function(){
+    if(!currentProfile) return;
+    document.getElementById("chatPage").style.display = "none";
+    document.getElementById("requestsPage").style.display = "none";
+    document.getElementById("profilePage").style.display = "block";
+    renderProfilePage();
 };
+
+function renderProfilePage(){
+    if(!currentProfile) return;
+    const name = currentProfile.name || "Name not set";
+    const avatar = name.trim().charAt(0).toUpperCase() || "K";
+    document.getElementById("profilePageName").innerText = name;
+    document.getElementById("profilePageId").innerText = currentProfile.publicId || "";
+    document.getElementById("profilePageAvatar").innerText = avatar;
+}
+
+window.backToMain = function(){
+    document.getElementById("profilePage").style.display = "none";
+    document.getElementById("chatPage").style.display = "block";
+    showMainPage("home");
+};
+
+window.openProfileUpdate = function(){
+    if(!currentProfile) return;
+    document.getElementById("profileId").value = currentProfile.publicId || "";
+    document.getElementById("profileName").value = currentProfile.name || "";
+    document.getElementById("profileBio").value = currentProfile.bio || "";
+    document.getElementById("currentPassword").value = "";
+    document.getElementById("newPassword").value = "";
+    document.getElementById("profileModal").style.display = "flex";
+};
+
+window.openSettings = function(){
+    document.getElementById("settingsModal").style.display = "flex";
+};
+window.closeSettings = function(){
+    document.getElementById("settingsModal").style.display = "none";
+};
+window.openKnowMore = function(){
+    document.getElementById("knowMoreModal").style.display = "flex";
+};
+window.closeKnowMore = function(){
+    document.getElementById("knowMoreModal").style.display = "none";
+};
+window.showBlockMaintenance = function(){
+    alert("Block option is currently Under Maintenance 🛠️");
+};
+
+/* PROFILE UPDATE */
 
 /* CLOSE PROFILE */
 
 window.closeProfile = function(){
+
+    const nameInput = document.getElementById("profileName");
+    const name = nameInput ? nameInput.value.trim() : "";
+
+    if(!name){
+        alert("Please set your unique name first.");
+        if(nameInput) nameInput.focus();
+        return;
+    }
 
     document.getElementById(
         "profileModal"
@@ -1949,6 +2093,9 @@ window.saveProfile = async function(){
             "profileBio"
         ).value.trim();
 
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+
     if(!name){
 
         alert(
@@ -1959,7 +2106,42 @@ window.saveProfile = async function(){
 
     }
 
+    if(name.length < 2){
+        alert("Name must be at least 2 characters.");
+        return;
+    }
+
+    if(newPassword && newPassword.length < 6){
+        alert("New password must be at least 6 characters.");
+        return;
+    }
+
+    if(newPassword && !currentPassword){
+        alert("Enter your current password to change the password.");
+        return;
+    }
+
     try{
+
+        // Names are public and must be unique (case-insensitive).
+        const allUsersSnap = await getDocs(
+            collection(db, "users")
+        );
+
+        const duplicate = allUsersSnap.docs.some(function(userDoc){
+            if(userDoc.id === currentProfile.id) return false;
+
+            const otherName = String(userDoc.data().name || "")
+                .trim()
+                .toLowerCase();
+
+            return otherName && otherName === name.toLowerCase();
+        });
+
+        if(duplicate){
+            alert("This name is already taken. Please choose another unique name.");
+            return;
+        }
 
         await updateDoc(
             doc(
@@ -1973,6 +2155,13 @@ window.saveProfile = async function(){
             }
         );
 
+        if(newPassword){
+            const user = auth.currentUser;
+            const credential = EmailAuthProvider.credential(user.email, currentPassword);
+            await reauthenticateWithCredential(user, credential);
+            await updatePassword(user, newPassword);
+        }
+
         currentProfile = {
             ...currentProfile,
             name:name,
@@ -1980,9 +2169,10 @@ window.saveProfile = async function(){
         };
 
         closeProfile();
+        renderProfilePage();
 
         alert(
-            "Profile saved ✅"
+            newPassword ? "Profile and password updated ✅" : "Profile saved ✅"
         );
 
         loadFriends();
@@ -2009,117 +2199,7 @@ function escapeHtml(value){
 
 }
 
-
-/* SPIDER-WEB CURSOR EFFECT */
-(function(){
-    const canvas = document.getElementById('spiderWebTrail');
-    if(!canvas || window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-
-    const ctx = canvas.getContext('2d');
-    const points = [];
-    const maxPoints = 18;
-    const bursts = [];
-    let mouse = {x:-100, y:-100, active:false};
-
-    function resize(){
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        canvas.width = Math.floor(window.innerWidth * dpr);
-        canvas.height = Math.floor(window.innerHeight * dpr);
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
-        ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-
-    function move(x,y){
-        mouse = {x,y,active:true};
-        points.push({x,y,life:1});
-        if(points.length > maxPoints) points.shift();
-    }
-
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', e => move(e.clientX,e.clientY), {passive:true});
-    window.addEventListener('mouseleave', () => { mouse.active=false; });
-    window.addEventListener('click', e => {
-        if(!mouse.active) return;
-        bursts.push({x:e.clientX,y:e.clientY,life:1});
-    }, {passive:true});
-
-    function draw(){
-        ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
-
-        for(let i=0;i<points.length;i++){
-            const p = points[i];
-            p.life *= 0.91;
-            if(i > 0){
-                const prev = points[i-1];
-                const alpha = p.life * (i / points.length) * 0.42;
-                ctx.beginPath();
-                ctx.moveTo(prev.x,prev.y);
-                ctx.lineTo(p.x,p.y);
-                ctx.strokeStyle = `rgba(227,27,35,${alpha})`;
-                ctx.lineWidth = 1.5;
-                ctx.shadowColor = 'rgba(227,27,35,.45)';
-                ctx.shadowBlur = 6;
-                ctx.stroke();
-            }
-        }
-
-        if(mouse.active && points.length > 3){
-            const r = 28;
-            ctx.save();
-            ctx.translate(mouse.x, mouse.y);
-            ctx.strokeStyle = 'rgba(255,48,64,.34)';
-            ctx.lineWidth = 1;
-            ctx.shadowColor = 'rgba(227,27,35,.55)';
-            ctx.shadowBlur = 8;
-            for(let i=0;i<8;i++){
-                const a = (Math.PI*2/8)*i;
-                ctx.beginPath();
-                ctx.moveTo(0,0);
-                ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);
-                ctx.stroke();
-            }
-            for(let ring=1;ring<=2;ring++){
-                ctx.beginPath();
-                ctx.arc(0,0,r*(ring/2),0,Math.PI*2);
-                ctx.stroke();
-            }
-            ctx.restore();
-        }
-
-        for(let i=bursts.length-1;i>=0;i--){
-            const b = bursts[i];
-            b.life *= 0.88;
-            const radius = (1-b.life)*34;
-            ctx.save();
-            ctx.translate(b.x,b.y);
-            ctx.strokeStyle = `rgba(255,48,64,${b.life})`;
-            ctx.lineWidth = 2;
-            ctx.shadowColor = 'rgba(227,27,35,.8)';
-            ctx.shadowBlur = 12;
-            for(let j=0;j<10;j++){
-                const a = (Math.PI*2/10)*j;
-                ctx.beginPath();
-                ctx.moveTo(Math.cos(a)*4,Math.sin(a)*4);
-                ctx.lineTo(Math.cos(a)*radius,Math.sin(a)*radius);
-                ctx.stroke();
-            }
-            ctx.restore();
-            if(b.life < 0.05) bursts.splice(i,1);
-        }
-
-        requestAnimationFrame(draw);
-    }
-
-    resize();
-    draw();
-})();
-
 </script>
-
-
-
-<canvas id="spiderWebTrail" aria-hidden="true"></canvas>
 
 </body>
 </html>
