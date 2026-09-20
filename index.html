@@ -290,13 +290,49 @@ body[data-theme="light"] #chatPage,body[data-theme="light"] .profile-page,body[d
 .reaction-btn.active{border-color:#e31b23;background:#3a1114}
 .reaction-picker{display:flex;gap:4px;margin-top:5px}
 @media(max-width:700px){.engage-bar{padding:7px 8px}.engage-chip{font-size:11px;padding:5px 8px}.typing-status{font-size:11px}}
+
+/* REQUEST PAGE + CROSS-DEVICE CHAT FIX */
+.requests-page{min-height:calc(100vh - 58px);box-sizing:border-box;}
+.requests-panel{max-width:760px;margin:0 auto;border-radius:24px;}
+.requests-list{padding:14px 16px 20px;}
+.requests-list .user{display:flex;align-items:center;gap:13px;padding:14px 12px;background:rgba(18,22,30,.92);border:1px solid #252d39;box-shadow:0 8px 24px rgba(0,0,0,.16);}
+.requests-list .user .avatar{flex:0 0 46px;width:46px;height:46px;}
+.requests-list .user-info{flex:1;min-width:0;}
+.requests-list .user-name{font-size:15px;font-weight:850;color:#fff;}
+.requests-list .user-meta{margin-top:3px;}
+.request-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:9px;}
+.request-actions button{min-width:86px;height:34px;border-radius:17px!important;padding:0 13px!important;font-weight:800;}
+.requests-list .empty{padding:45px 20px;text-align:center;color:#8f98a6;}
+#messagesPage .send-area{z-index:10;}
+#messagesPage .send-message-btn{flex:0 0 76px!important;width:76px!important;height:42px!important;cursor:pointer;touch-action:manipulation;}
+#messagesPage .send-message-btn:disabled{opacity:.65;cursor:wait;}
+#messagesPage #messageInput{touch-action:manipulation;-webkit-appearance:none;appearance:none;}
+@media(max-width:700px){
+ .requests-list{padding:10px;}
+ .requests-list .user{align-items:flex-start;}
+ .request-actions{width:100%;justify-content:flex-start;}
+ .request-actions button{flex:1;min-width:0;}
+ #messagesPage .send-message-btn{flex-basis:68px!important;width:68px!important;}
+}
+
+/* FINAL LAYOUT FIX */
+#requestsPage{position:fixed!important;inset:0!important;z-index:50!important;width:100%!important;height:100%!important;min-height:100vh!important;overflow:auto!important;padding:30px!important;box-sizing:border-box!important;background:#080b10!important;}
+#requestsPage .requests-panel{margin:0 auto!important;}
+@media(max-width:700px){#requestsPage{padding:14px!important;}#requestsPage .requests-panel{width:100%!important;max-width:none!important;}}
+#messagesPage{height:100%!important;min-height:0!important;}
+#messagesPage .chat-container{height:100%!important;min-height:0!important;}
+#messagesPage .chat{min-height:0!important;}
+#messagesPage .messages{min-height:0!important;}
+#messagesPage .send-area{flex-shrink:0!important;}
+#messagesPage .send-message-btn:disabled{opacity:.65!important;cursor:wait!important;transform:none!important;}
+
 </style>
 </head>
 
 <body>
 <div id="featureToastContainer" class="feature-toast-container"></div>
 
-<div class="login" id="loginPage" style="display:none">
+<div class="login" id="loginPage" style="display:block">
 
     <h1>💬 MyChatBox</h1>
 
@@ -496,10 +532,10 @@ body[data-theme="light"] #chatPage,body[data-theme="light"] .profile-page,body[d
                 <input
                     id="messageInput"
                     placeholder="Type a message..."
-                    onkeypress="handleEnter(event)"
+                    onkeydown="handleEnter(event)"
                     oninput="handleTyping()"
                 >
-                <button onclick="sendMessage()">
+                <button type="button" class="send-message-btn" onclick="sendMessage()">
                     Send
                 </button>
             </div>
@@ -824,6 +860,7 @@ import {
     onSnapshot,
     serverTimestamp,
     getDocs,
+    getDoc,
     updateDoc,
     deleteDoc,
     doc
@@ -1588,13 +1625,13 @@ function renderRequests(snapshot){
 
                     <div class="request-actions">
 
-                        <button
+                        <button type="button"
                             onclick="acceptRequest('${d.id}')"
                         >
                             Accept
                         </button>
 
-                        <button
+                        <button type="button"
                             class="secondary"
                             onclick="rejectRequest('${d.id}')"
                         >
@@ -1627,27 +1664,18 @@ window.acceptRequest = async function(requestId){
                 requestId
             );
 
-        const requestSnap =
-            await getDocs(
-                query(
-                    collection(
-                        db,
-                        "friendRequests"
-                    ),
-                    where(
-                        "__name__",
-                        "==",
-                        requestId
-                    )
-                )
-            );
+        const requestSnap = await getDoc(requestRef);
 
-        if(requestSnap.empty){
+        if(!requestSnap.exists()){
+            alert("This friend request is no longer available.");
             return;
         }
 
-        const request =
-            requestSnap.docs[0].data();
+        const request = requestSnap.data();
+        if(request.status !== "pending"){
+            alert("This request has already been handled.");
+            return;
+        }
 
         /*
           IMPORTANT:
@@ -1912,19 +1940,23 @@ window.filterFriends = function(){
 /* MAIN NAVIGATION */
 
 window.showMainPage = function(page){
+    const chatPage = document.getElementById("chatPage");
     const home = document.getElementById("homePage");
     const messages = document.getElementById("messagesPage");
     const requests = document.getElementById("requestsPage");
     const homeNav = document.getElementById("homeNav");
     const messagesNav = document.getElementById("messagesNav");
     const requestsNav = document.getElementById("requestsNav");
-    home.style.display = page === "home" ? "block" : "none";
-    messages.style.display = page === "messages" ? "block" : "none";
-    requests.style.display = page === "requests" ? "block" : "none";
+
+    if(chatPage) chatPage.style.display = page === "requests" ? "none" : "block";
+    if(home) home.style.display = page === "home" ? "block" : "none";
+    if(messages) messages.style.display = page === "messages" ? "block" : "none";
+    if(requests) requests.style.display = page === "requests" ? "block" : "none";
+
     if(page === "messages") showFriendsList();
-    homeNav.classList.toggle("active", page === "home");
-    messagesNav.classList.toggle("active", page === "messages");
-    requestsNav.classList.toggle("active", page === "requests");
+    if(homeNav) homeNav.classList.toggle("active", page === "home");
+    if(messagesNav) messagesNav.classList.toggle("active", page === "messages");
+    if(requestsNav) requestsNav.classList.toggle("active", page === "requests");
     if(page === "requests" && currentProfile) loadRequests();
 };
 
@@ -2168,13 +2200,16 @@ function loadMessages(){
 
 window.sendMessage = async function(){
 
-    const input =
-        document.getElementById(
-            "messageInput"
-        );
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.querySelector("#messagesPage .send-message-btn");
+    if(!input || !currentProfile || !selectedUser){
+        if(!selectedUser) alert("First select a friend to chat.");
+        return;
+    }
 
-    const text =
-        input.value.trim();
+    if(input.dataset.sending === "1") return;
+
+    const text = input.value.trim();
 
     if(!text){
         return;
@@ -2206,6 +2241,8 @@ window.sendMessage = async function(){
     }
 
     try{
+        input.dataset.sending = "1";
+        if(sendBtn){ sendBtn.disabled = true; sendBtn.textContent = "Sending…"; }
 
         await addDoc(
             collection(db,"messages"),
@@ -2236,13 +2273,16 @@ window.sendMessage = async function(){
         );
 
         input.value = "";
+        input.focus();
         updateChatStreak();
 
     }
     catch(error){
-
-        alert(error.message);
-
+        alert("Message send nahi hua: " + (error?.message || "Please try again."));
+    }
+    finally{
+        input.dataset.sending = "0";
+        if(sendBtn){ sendBtn.disabled = false; sendBtn.textContent = "Send"; }
     }
 
 };
@@ -2467,11 +2507,10 @@ applyFeatureUI();
 /* ENTER */
 
 window.handleEnter = function(event){
-
-    if(event.key === "Enter"){
+    if(event.key === "Enter" && !event.shiftKey){
+        event.preventDefault();
         sendMessage();
     }
-
 };
 
 /* PROFILE */
