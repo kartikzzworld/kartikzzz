@@ -81,7 +81,28 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 .hero-title{font-size:27px;font-weight:800}.hero-sub{margin-top:6px;color:#9da6b4;font-size:14px}
 .id-card{padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px}.card-label{font-size:11px;color:#8f98a6;font-weight:700;letter-spacing:1px}.big-id{font-size:30px;font-weight:900;color:#ff4a55;margin:7px 0}.id-help{color:#8993a2;font-size:13px}.id-card button{flex:none}
 .recommend-card{padding:20px;display:flex;gap:14px;align-items:flex-start}.recommend-icon{font-size:24px}.recommend-title{font-weight:800;margin-bottom:4px}.recommend-text{font-size:13px;color:#929cab;line-height:1.5}
-.messages-page{height:calc(100% - 58px)}
+
+.messages-page{height:calc(100% - 58px);background:#080b10}
+.messages-page .chat-container{height:100%;display:block}
+.messages-page .sidebar{width:100%;height:100%;border-right:0;background:linear-gradient(180deg,#0e1219,#080b10)}
+.messages-page .sidebar-top{padding:18px 20px;border-bottom:1px solid var(--line);background:rgba(13,17,24,.96);position:sticky;top:0;z-index:3}
+.messages-page .sidebar-top:before{content:'💬  My Messages';display:block;font-size:23px;font-weight:900;margin-bottom:12px;color:#fff}
+.messages-page .search{margin-top:0;border-radius:14px}
+.messages-page .list{padding:6px 0}
+.messages-page .user{padding:15px 20px;min-height:70px;border-bottom:1px solid #1c222c;gap:12px}
+.messages-page .user:hover{background:rgba(227,27,35,.08)}
+.messages-page .avatar{width:48px;height:48px;font-size:17px}
+.messages-page .user-name{font-size:15px}
+.messages-page .user-meta{font-size:12px}
+.messages-page .chat{display:none;width:100%;height:100%;background:#080b10}
+.messages-page.chat-open .sidebar{display:none}
+.messages-page.chat-open .chat{display:flex}
+.messages-page .chat-header{min-height:64px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.messages-page .chat-head-info{min-width:0;flex:1}
+.messages-page .chat-back-btn{background:#252b35!important;color:#fff!important;box-shadow:none!important;width:auto!important;padding:8px 11px!important}
+.messages-page .chat-head-actions{display:flex;gap:5px;align-items:center}
+@media(max-width:700px){.messages-page .sidebar-top{padding:14px}.messages-page .sidebar-top:before{font-size:20px}.messages-page .user{padding:14px 12px}.messages-page .chat-header{padding:8px 10px}}
+
 .message-actions{display:flex;justify-content:flex-end;gap:5px;margin-top:7px;opacity:.9}.message-actions button{padding:5px 8px;font-size:10px;border-radius:7px;box-shadow:none;background:#2a303b}.message-actions .delete-btn{background:#6f1118}.edited-label{font-size:9px;opacity:.55;margin-left:5px}
 @media(max-width:700px){.main-tabs{justify-content:center}.main-nav{flex:1;padding:8px 10px}.home-page{padding:16px}.hero-card{padding:20px}.hero-title{font-size:21px}.id-card{align-items:flex-start;flex-direction:column}.id-card button{width:100%}.big-id{font-size:25px}}
 
@@ -1880,6 +1901,7 @@ window.showMainPage = function(page){
     home.style.display = page === "home" ? "block" : "none";
     messages.style.display = page === "messages" ? "block" : "none";
     requests.style.display = page === "requests" ? "block" : "none";
+    if(page === "messages") showFriendsList();
     homeNav.classList.toggle("active", page === "home");
     messagesNav.classList.toggle("active", page === "messages");
     requestsNav.classList.toggle("active", page === "requests");
@@ -1924,6 +1946,23 @@ window.showTab = function(tab){
     else showMainPage("messages");
 };
 
+window.showFriendsList = function(){
+    const page=document.getElementById("messagesPage");
+    if(!page)return;
+    page.classList.remove("chat-open");
+    if(unsubscribeMessages){unsubscribeMessages();unsubscribeMessages=null;}
+    if(unsubscribeTyping){unsubscribeTyping();unsubscribeTyping=null;}
+    if(unsubscribeSelectedProfile){unsubscribeSelectedProfile();unsubscribeSelectedProfile=null;}
+    selectedUser=null;
+    const box=document.getElementById("messages");
+    if(box)box.innerHTML='<div class="no-chat">Select a friend to start a private chat.</div>';
+    const header=document.getElementById("chatHeader");
+    if(header)header.innerHTML='Select a friend to chat';
+    const input=document.getElementById("messageInput");
+    if(input)input.value="";
+    loadFriends();
+};
+
 /* SELECT FRIEND */
 
 function selectUser(user,element){
@@ -1944,7 +1983,10 @@ function selectUser(user,element){
 
     element.classList.add("selected");
 
+    document.getElementById("messagesPage").classList.add("chat-open");
+
     document.getElementById("chatHeader").innerHTML = `
+      <button type="button" class="chat-back-btn" onclick="showFriendsList()">←</button>
       <div class="chat-head-info">
         <div>💬 ${escapeHtml(user.name || user.email)}</div>
         <small>${user.online ? "🟢 Online" : (user.lastSeen ? "Last seen " + formatLastSeen(user.lastSeen) : "⚫ Offline")} · ${escapeHtml(user.publicId || "")}</small>
