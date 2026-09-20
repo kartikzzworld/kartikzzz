@@ -162,6 +162,12 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 .side-game-launcher span{font-size:8px;letter-spacing:1.5px;font-weight:900;color:#ff6870;}
 .side-game-launcher:hover{transform:translateY(-50%) scale(1.06);border-color:#ff3d4a;box-shadow:0 0 30px rgba(227,27,35,.45),0 10px 24px rgba(0,0,0,.4);}
 @media(max-width:650px){.side-game-launcher{right:9px;width:48px;height:58px;border-radius:15px;font-size:21px}.side-game-launcher span{font-size:7px}}
+
+/* TIME PASS GAME BUTTON */
+.timepass-btn{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:999;width:65px;height:72px;border:1px solid #e31b23;border-radius:18px;background:linear-gradient(145deg,#25070a,#090909);color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:27px;box-shadow:0 0 20px rgba(227,27,35,.35);transition:.2s}
+.timepass-btn span{font-size:7px;font-weight:900;letter-spacing:1px;color:#ff6870}
+.timepass-btn:hover{transform:translateY(-50%) scale(1.08);box-shadow:0 0 30px rgba(227,27,35,.6)}
+@media(max-width:650px){.timepass-btn{right:8px;width:52px;height:60px;font-size:22px}}
 </style>
 </head>
 
@@ -209,7 +215,7 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 
 </div>
 
-<div id="chatPage">
+<div id="chatPage"><button class="timepass-btn" onclick="openSpiderGame()" title="Time Pass Game">🎮<span>TIME PASS</span></button>
 
     <div class="header">
 
