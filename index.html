@@ -116,6 +116,21 @@ input:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(227
 @keyframes webSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes webPulse{0%,100%{opacity:.65}50%{opacity:1}}
 .spider-add-row input:focus{border-color:#ff4a55!important;box-shadow:0 0 0 3px rgba(227,27,35,.12),0 0 18px rgba(227,27,35,.12)}
+
+
+/* SPIDER-WEB CURSOR TRAIL */
+#spiderWebTrail{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:99999;
+}
+@media (pointer:coarse), (prefers-reduced-motion:reduce){
+    #spiderWebTrail{display:none}
+}
+
 </style>
 </head>
 
@@ -1994,7 +2009,117 @@ function escapeHtml(value){
 
 }
 
+
+/* SPIDER-WEB CURSOR EFFECT */
+(function(){
+    const canvas = document.getElementById('spiderWebTrail');
+    if(!canvas || window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+
+    const ctx = canvas.getContext('2d');
+    const points = [];
+    const maxPoints = 18;
+    const bursts = [];
+    let mouse = {x:-100, y:-100, active:false};
+
+    function resize(){
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    function move(x,y){
+        mouse = {x,y,active:true};
+        points.push({x,y,life:1});
+        if(points.length > maxPoints) points.shift();
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', e => move(e.clientX,e.clientY), {passive:true});
+    window.addEventListener('mouseleave', () => { mouse.active=false; });
+    window.addEventListener('click', e => {
+        if(!mouse.active) return;
+        bursts.push({x:e.clientX,y:e.clientY,life:1});
+    }, {passive:true});
+
+    function draw(){
+        ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+
+        for(let i=0;i<points.length;i++){
+            const p = points[i];
+            p.life *= 0.91;
+            if(i > 0){
+                const prev = points[i-1];
+                const alpha = p.life * (i / points.length) * 0.42;
+                ctx.beginPath();
+                ctx.moveTo(prev.x,prev.y);
+                ctx.lineTo(p.x,p.y);
+                ctx.strokeStyle = `rgba(227,27,35,${alpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.shadowColor = 'rgba(227,27,35,.45)';
+                ctx.shadowBlur = 6;
+                ctx.stroke();
+            }
+        }
+
+        if(mouse.active && points.length > 3){
+            const r = 28;
+            ctx.save();
+            ctx.translate(mouse.x, mouse.y);
+            ctx.strokeStyle = 'rgba(255,48,64,.34)';
+            ctx.lineWidth = 1;
+            ctx.shadowColor = 'rgba(227,27,35,.55)';
+            ctx.shadowBlur = 8;
+            for(let i=0;i<8;i++){
+                const a = (Math.PI*2/8)*i;
+                ctx.beginPath();
+                ctx.moveTo(0,0);
+                ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);
+                ctx.stroke();
+            }
+            for(let ring=1;ring<=2;ring++){
+                ctx.beginPath();
+                ctx.arc(0,0,r*(ring/2),0,Math.PI*2);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        for(let i=bursts.length-1;i>=0;i--){
+            const b = bursts[i];
+            b.life *= 0.88;
+            const radius = (1-b.life)*34;
+            ctx.save();
+            ctx.translate(b.x,b.y);
+            ctx.strokeStyle = `rgba(255,48,64,${b.life})`;
+            ctx.lineWidth = 2;
+            ctx.shadowColor = 'rgba(227,27,35,.8)';
+            ctx.shadowBlur = 12;
+            for(let j=0;j<10;j++){
+                const a = (Math.PI*2/10)*j;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(a)*4,Math.sin(a)*4);
+                ctx.lineTo(Math.cos(a)*radius,Math.sin(a)*radius);
+                ctx.stroke();
+            }
+            ctx.restore();
+            if(b.life < 0.05) bursts.splice(i,1);
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    resize();
+    draw();
+})();
+
 </script>
+
+
+
+<canvas id="spiderWebTrail" aria-hidden="true"></canvas>
 
 </body>
 </html>
