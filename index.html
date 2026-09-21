@@ -385,6 +385,20 @@ body[data-theme="light"] #chatPage,body[data-theme="light"] .profile-page,body[d
     min-height:60px!important;
   }
 }
+
+/* MOBILE KEYBOARD INPUT FIX - only chat input behavior */
+@media (max-width:700px){
+  #messagesPage .send-area{
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:var(--keyboard-offset, 0px) !important;
+    z-index:9999 !important;
+  }
+  #messagesPage .messages{
+    padding-bottom:calc(78px + var(--keyboard-offset, 0px)) !important;
+  }
+}
 </style>
 </head>
 
@@ -611,6 +625,9 @@ body[data-theme="light"] #chatPage,body[data-theme="light"] .profile-page,body[d
     <div class="request-doodle-bg doodle-web-right">✣</div>
 
     <div class="requests-panel">
+        <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:12px;">
+            <button type="button" class="secondary" onclick="showMainPage('home')">← Back</button>
+        </div>
         <div class="requests-hero spider-request-hero">
             <div class="web-lines web-lines-left">╲│╱<br>─●─<br>╱│╲</div>
             <div class="spider-doodle-big">🕷️</div>
@@ -2903,5 +2920,36 @@ function escapeHtml(value){
 
 </script>
 
+
+
+<script>
+/* Keep the existing message input directly above the mobile keyboard. */
+(function(){
+  function updateChatKeyboardOffset(){
+    if(!window.visualViewport) return;
+    var vv = window.visualViewport;
+    var offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    document.documentElement.style.setProperty('--keyboard-offset', offset + 'px');
+  }
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', updateChatKeyboardOffset);
+    window.visualViewport.addEventListener('scroll', updateChatKeyboardOffset);
+  }
+  window.addEventListener('resize', updateChatKeyboardOffset);
+  window.addEventListener('orientationchange', function(){ setTimeout(updateChatKeyboardOffset, 100); });
+  document.addEventListener('focusin', function(e){
+    if(e.target && e.target.id === 'messageInput'){
+      setTimeout(updateChatKeyboardOffset, 50);
+      setTimeout(updateChatKeyboardOffset, 250);
+    }
+  });
+  document.addEventListener('focusout', function(e){
+    if(e.target && e.target.id === 'messageInput'){
+      setTimeout(updateChatKeyboardOffset, 100);
+    }
+  });
+  updateChatKeyboardOffset();
+})();
+</script>
 </body>
 </html>
